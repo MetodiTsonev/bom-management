@@ -7,6 +7,7 @@ import Products from './components/pages/Products';
 import Expenses from './components/pages/Expenses';
 import BOM from './components/pages/Bom';
 import Login from './components/pages/Login';
+import Materials from './components/pages/Materials';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/materials" element={<Materials />} />
         <Route path="/products" element={<Products />} />
         <Route path="/expenses" element={<Expenses />} />
         <Route path="/bom" element={<BOM />} />

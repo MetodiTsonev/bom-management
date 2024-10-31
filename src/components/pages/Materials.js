@@ -1,8 +1,7 @@
 import React from "react";
-import Button from "../components/Button";
-import Table from "../components/Table";
-
-import './Materials.css';
+import Button from "../Button";
+import Table from "../Table";
+import "./Materials.css";
 
 const Materials = () => {
   const data = [
