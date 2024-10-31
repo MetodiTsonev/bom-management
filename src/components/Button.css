@@ -1,0 +1,26 @@
+button{
+    color: white;
+    font-size: 18px;
+    padding: 14px 16px;
+    margin: 8px 0;
+    border: 1px solid black;
+    border-radius: 12px;
+    cursor: pointer;
+    width: 40%;
+}
+
+.btn-add{
+    background-color: #4CAF50;
+}
+
+.btn-delete{
+    background-color: #f44336;
+}
+
+.btn-view{
+    background-color: #e45513;
+}
+
+.btn-edit{
+    background-color: #2e60e7;
+}
