@@ -1,0 +1,116 @@
+/* src/components/NavBar.css */
+.navbar {
+    background-color: #000; /* Solid black background */
+    height: 80px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    font-size: 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+  }
+
+  .navbar-container {
+    display: flex;
+    justify-content: space-between; /* Logo on the left, items on the right */
+    align-items: center;
+    width: 100%;
+    max-width: 1500px;
+  }
+
+  /* Logo styling */
+  .navbar-logo {
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  /* Menu items styling */
+  .nav-menu {
+    display: flex;
+    list-style: none;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-item {
+    margin: 0 20px; /* Space between each menu item */
+  }
+
+  .nav-links {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease;
+  }
+
+  .nav-links:hover {
+    color: #00bfff; /* Hover color effect */
+  }
+
+  /* Login button styling */
+  .nav-links-login {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border: 1px solid #fff;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+
+  .nav-links-login:hover {
+    background-color: #fff;
+    color: #000;
+  }
+
+  .menu-icon {
+    display: none;
+  }
+
+  /* Mobile responsiveness */
+  @media screen and (max-width: 960px) {
+    .menu-icon {
+      display: block;
+      font-size: 1.8rem;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .nav-menu {
+      display: none; /* Hide the menu by default on mobile */
+    }
+
+    .nav-menu.active {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 80px;
+      left: 0;
+      width: 100%;
+      height: calc(100vh - 80px);
+      background-color: #242222;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.5s ease;
+    }
+
+    .nav-item {
+      margin: 1.5rem 0;
+    }
+
+    .nav-links {
+      font-size: 1.5rem;
+    }
+
+    .nav-links-login {
+      font-size: 2rem;
+      width: 80%;
+      text-align: center;
+    }
+  }
