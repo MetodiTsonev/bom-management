@@ -1,6 +1,6 @@
-/* src/pages/Login.css */
+/* src/pages/Register.css */
 
-.login-container {
+.register-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -9,25 +9,25 @@
     text-align: center;
   }
 
-  .login-title {
+  .register-title {
     font-size: 2.5rem;
     font-weight: bold;
     margin-bottom: 10px;
   }
 
-  .login-form {
+  .register-form {
     display: flex;
     flex-direction: column;
     width: 300px; /* Sets the width of the form and buttons */
     text-align: left;
   }
 
-  .login-form label {
+  .register-form label {
     font-weight: bold;
     margin-top: 10px;
   }
 
-  .login-form input {
+  .register-form input {
     padding: 10px;
     margin-top: 5px;
     margin-bottom: 15px;
@@ -36,15 +36,15 @@
     font-size: 1rem;
   }
 
-  .login-register-buttons {
+  .register-login-buttons {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: center; /* Ensures vertical alignment */
     margin-top: 10px;
   }
 
-  .login-button,
-  .register-button {
+  .register-submit-button,
+  .login-button {
     width: 48%; /* Makes each button take up half the form width */
     padding: 12px;
     font-size: 1rem;
@@ -54,28 +54,28 @@
     cursor: pointer;
     transition: background-color 0.3s;
     box-sizing: border-box;
-    display: flex;
+    display: flex; /* Ensure consistent alignment */
     align-items: center;
-    justify-content: center;
+    justify-content: center; /* Centers text in button */
+  }
+
+  .register-submit-button {
+    color: white;
+    background-color: orange;
+    border: none;
+  }
+
+  .register-submit-button:hover {
+    background-color: #e69500;
   }
 
   .login-button {
     color: white;
     background-color: #000;
+    text-decoration: none;
     border: none;
   }
 
   .login-button:hover {
     background-color: #333;
-  }
-
-  .register-button {
-    color: white;
-    background-color: orange;
-    text-decoration: none;
-    border: none;
-  }
-
-  .register-button:hover {
-    background-color: #e69500;
   }

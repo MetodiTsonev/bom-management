@@ -8,6 +8,7 @@ import Expenses from './components/pages/Expenses';
 import BOM from './components/pages/Bom';
 import Login from './components/pages/Login';
 import Materials from './components/pages/Materials';
+import Register from './components/pages/Register';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/expenses" element={<Expenses />} />
         <Route path="/bom" element={<BOM />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </Router>
   );
