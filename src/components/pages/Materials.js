@@ -1,6 +1,9 @@
 import React from "react";
 import Button from "../Button";
+
 import Table from "../Table";
+import Search from "../Search";
+
 import "./Materials.css";
 
 const Materials = () => {
@@ -18,10 +21,14 @@ const Materials = () => {
                 <Table data={data} />
             </div>
             <div className="right-column">
-                <Button label="Add" onClick={() => alert("Button clicked")} type="add" />
-                <Button label="Delete" onClick={() => alert("Button clicked")} type="delete" />
-                <Button label="Edit" onClick={() => alert("Button clicked")} type="edit" />
-                <Button label="View" onClick={() => alert("Button clicked")} type="view" />
+                <div className="searchField">
+                    <Search />
+                    <Button label="Go" onClick={() => alert("Search clicked")} type="search" />
+                </div>
+                <Button label="Add" onClick={() => alert("Add clicked")} type="add" />
+                <Button label="Delete" onClick={() => alert("Delete clicked")} type="delete" />
+                <Button label="Edit" onClick={() => alert("Edit clicked")} type="edit" />
+                <Button label="View" onClick={() => alert("View clicked")} type="view" />
             </div>
         </div>
     </div>

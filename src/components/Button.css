@@ -24,3 +24,10 @@ button{
 .btn-edit{
     background-color: #2e60e7;
 }
+
+.btn-search{
+    padding: 10px 20px;
+    margin-left: 10px;
+    background-color: #009879;
+    width: 25%;
+}

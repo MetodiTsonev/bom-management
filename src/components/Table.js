@@ -1,4 +1,5 @@
 import React from 'react';
+import './Table.css';
 
 const Table = ({ data }) => {
   if (!data || data.length === 0) {
