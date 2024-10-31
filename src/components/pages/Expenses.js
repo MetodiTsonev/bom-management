@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Title from '../Description';
+import Description from '../Description';
 import Table from '../Table';
 import Search from '../Search';
 import Button from '../Button';
@@ -15,7 +15,7 @@ function Expenses() {
   ];
   return (
     <div>
-      <Title text="Expenses" description="The expenses page is used for configuring expense details" />
+      <Description text="Expenses" description="The expenses page is used for configuring expense details" />
       <div className="container">
         <div className="left-column">
           <Table data={data} />

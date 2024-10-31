@@ -3,7 +3,7 @@ import React from "react";
 import Button from "../Button";
 import Table from "../Table";
 import Search from "../Search";
-import Title from "../Description";
+import Description from "../Description";
 
 import "./PageStyle.css";
 
@@ -16,7 +16,7 @@ const Materials = () => {
 
   return (
     <div>
-        <Title text = 'Materials' description= 'The material page is used for configuring material details' />
+        <Description text = 'Materials' description= 'The material page is used for configuring material details' />
         <div className="container">
             <div className="left-column">
                 <Table data={data} />
