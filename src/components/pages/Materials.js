@@ -1,8 +1,9 @@
 import React from "react";
-import Button from "../Button";
 
+import Button from "../Button";
 import Table from "../Table";
 import Search from "../Search";
+import Title from "../Description";
 
 import "./Materials.css";
 
@@ -15,7 +16,7 @@ const Materials = () => {
 
   return (
     <div>
-        <h1>Materials</h1>
+        <Title text = 'Materials' description= 'The material page is used for configuring material details' />
         <div className="container">
             <div className="left-column">
                 <Table data={data} />
