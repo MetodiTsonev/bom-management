@@ -5,7 +5,7 @@ import Table from "../Table";
 import Search from "../Search";
 import Title from "../Description";
 
-import "./Materials.css";
+import "./PageStyle.css";
 
 const Materials = () => {
   const data = [
