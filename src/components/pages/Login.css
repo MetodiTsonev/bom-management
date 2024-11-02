@@ -1,81 +1,89 @@
 /* src/pages/Login.css */
 
 .login-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 80vh;
-    text-align: center;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  text-align: center;
+}
 
-  .login-title {
-    font-size: 2.5rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
+.login-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
 
-  .login-form {
-    display: flex;
-    flex-direction: column;
-    width: 300px; /* Sets the width of the form and buttons */
-    text-align: left;
-  }
+.login-form {
+  display: flex;
+  flex-direction: column;
+  width: 300px; /* Ensures the width is consistent */
+  text-align: left;
+}
 
-  .login-form label {
-    font-weight: bold;
-    margin-top: 10px;
-  }
+.login-form label {
+  font-weight: bold;
+  margin-top: 10px;
+}
 
-  .login-form input {
-    padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
-  }
+.login-form input {
+  width: 100%; /* Full width of the form */
+  padding: 12px; /* Consistent padding */
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  background-color: #ffffff;
+  color: #333;
+  box-sizing: border-box; /* Ensures padding doesn't affect width */
+}
 
-  .login-register-buttons {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 10px;
-  }
+.login-form input:focus {
+  border-color: #333; /* Consistent focus color */
+}
 
-  .login-button,
-  .register-button {
-    width: 48%; /* Makes each button take up half the form width */
-    padding: 12px;
-    font-size: 1rem;
-    font-weight: bold;
-    text-align: center;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+.login-register-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
 
-  .login-button {
-    color: white;
-    background-color: #000;
-    border: none;
-  }
+.login-button,
+.register-button {
+  width: 48%; /* Makes each button take up half the form width */
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  .login-button:hover {
-    background-color: #333;
-  }
+.login-button {
+  color: white;
+  background-color: #000;
+  border: none;
+}
 
-  .register-button {
-    color: white;
-    background-color: orange;
-    text-decoration: none;
-    border: none;
-  }
+.login-button:hover {
+  background-color: #333;
+}
 
-  .register-button:hover {
-    background-color: #e69500;
-  }
+.register-button {
+  color: white;
+  background-color: orange;
+  text-decoration: none;
+  border: none;
+}
+
+.register-button:hover {
+  background-color: #e69500;
+}

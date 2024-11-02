@@ -10,7 +10,7 @@ function Login() {
       <p>Please log in to access your account.</p>
       <form className="login-form">
         <label htmlFor="username">Username</label>
-        <input type="text" id="username" name="username" placeholder="Enter your username" required />
+        <input className='username-field' type="text" id="username" name="username" placeholder="Enter your username" required />
 
         <label htmlFor="password">Password</label>
         <input type="password" id="password" name="password" placeholder="Enter your password" required />

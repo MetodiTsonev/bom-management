@@ -1,81 +1,83 @@
 /* src/pages/Register.css */
 
 .register-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 80vh;
-    text-align: center;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  text-align: center;
+}
 
-  .register-title {
-    font-size: 2.5rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
+.register-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
 
-  .register-form {
-    display: flex;
-    flex-direction: column;
-    width: 300px; /* Sets the width of the form and buttons */
-    text-align: left;
-  }
+.register-form {
+  display: flex;
+  flex-direction: column;
+  width: 300px; /* Ensures the width is consistent */
+  text-align: left;
+}
 
-  .register-form label {
-    font-weight: bold;
-    margin-top: 10px;
-  }
+.register-form label {
+  font-weight: bold;
+  margin-top: 10px;
+}
 
-  .register-form input {
-    padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
-  }
+.register-form input {
+  width: 100%; /* Full width of the form */
+  padding: 12px; /* Consistent padding */
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box; /* Ensures padding doesn't affect width */
+}
 
-  .register-login-buttons {
-    display: flex;
-    justify-content: space-between;
-    align-items: center; /* Ensures vertical alignment */
-    margin-top: 10px;
-  }
+.register-login-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
 
-  .register-submit-button,
-  .login-button {
-    width: 48%; /* Makes each button take up half the form width */
-    padding: 12px;
-    font-size: 1rem;
-    font-weight: bold;
-    text-align: center;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    box-sizing: border-box;
-    display: flex; /* Ensure consistent alignment */
-    align-items: center;
-    justify-content: center; /* Centers text in button */
-  }
+.register-submit-button,
+.login-button {
+  width: 48%; /* Makes each button take up half the form width */
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  .register-submit-button {
-    color: white;
-    background-color: orange;
-    border: none;
-  }
+.register-submit-button {
+  color: white;
+  background-color: orange;
+  border: none;
+}
 
-  .register-submit-button:hover {
-    background-color: #e69500;
-  }
+.register-submit-button:hover {
+  background-color: #e69500;
+}
 
-  .login-button {
-    color: white;
-    background-color: #000;
-    text-decoration: none;
-    border: none;
-  }
+.login-button {
+  color: white;
+  background-color: #000;
+  text-decoration: none;
+  border: none;
+}
 
-  .login-button:hover {
-    background-color: #333;
-  }
+.login-button:hover {
+  background-color: #333;
+}
