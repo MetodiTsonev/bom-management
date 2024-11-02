@@ -87,3 +87,6 @@
 .register-button:hover {
   background-color: #e69500;
 }
+.login-form .username-field {
+  width: 100%; /* Ensures the width is consistent with other input fields */
+}
