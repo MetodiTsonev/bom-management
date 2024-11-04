@@ -1,6 +1,6 @@
 // src/App.js
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import NavBar from './components/NavBar';
 import Home from './components/pages/Home';
 import Products from './components/pages/Products';
@@ -8,22 +8,50 @@ import Expenses from './components/pages/Expenses';
 import BOM from './components/pages/Bom';
 import Login from './components/pages/Login';
 import Materials from './components/pages/Materials';
-import Register from './components/pages/Register';
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Check local storage on initial load to set login state
+  useEffect(() => {
+    const loggedIn = localStorage.getItem('isAuthenticated');
+    if (loggedIn === 'true') {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const handleLogin = (username, password) => {
+    // Hardcoded user credentials
+    if (username === 'admin' && password === 'admin') {
+      setIsAuthenticated(true);
+      localStorage.setItem('isAuthenticated', 'true'); // Persist login state
+      return true;
+    }
+    return false;
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('isAuthenticated'); // Clear login state
+    window.location.href = '/'; // Redirect to home page on logout
+  };
+
   return (
     <Router>
-      {/* Navbar will appear on every page */}
-      <NavBar />
+      <NavBar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/materials" element={<Materials />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/expenses" element={<Expenses />} />
-        <Route path="/bom" element={<BOM />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login onLogin={handleLogin} />} />
+
+        {/* Protected Routes */}
+        <Route path="/materials" element={isAuthenticated ? <Materials /> : <Navigate to="/login" />} />
+        <Route path="/products" element={isAuthenticated ? <Products /> : <Navigate to="/login" />} />
+        <Route path="/expenses" element={isAuthenticated ? <Expenses /> : <Navigate to="/login" />} />
+        <Route path="/bom" element={isAuthenticated ? <BOM /> : <Navigate to="/login" />} />
+
+        {/* Redirect any other route to home if not authenticated */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
   );
