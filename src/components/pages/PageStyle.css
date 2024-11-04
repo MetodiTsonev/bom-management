@@ -6,6 +6,9 @@
     width: 50%;
     height: 20rem;
 }
+.searchField{
+    width: 40%;
+}
 .left-column{
     display: flex;
     flex-direction: column;

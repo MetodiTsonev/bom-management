@@ -20,7 +20,7 @@ const Materials = () => {
   const handleAdd = () => {
     setIsFormVisible(true);
   }
-  
+
   const handleClose = () => {
     setIsFormVisible(false);
   }
@@ -40,9 +40,9 @@ const Materials = () => {
             <div className="right-column">
                 <div className="searchField">
                     <Search />
-                    <Button label="Go" onClick={() => alert("Search clicked")} type="search" />
+                    <Button id-='search' label="Go" onClick={() => alert("Search clicked")} type="search" />
                 </div>
-                <Button label="Add" onClick = {handleAdd} type="add" />                
+                <Button label="Add" onClick = {handleAdd} type="add" />
                 <Button label="Delete" onClick={() => alert("Delete clicked")} type="delete" />
                 <Button label="Edit" onClick={() => alert("Edit clicked")} type="edit" />
                 <Button label="View" onClick={() => alert("View clicked")} type="view" />
