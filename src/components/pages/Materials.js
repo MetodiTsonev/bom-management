@@ -6,8 +6,24 @@ import Search from "../Search";
 import Description from "../Description";
 
 import "./PageStyle.css";
+import AddMaterialForm from "./AddMaterialForm";
 
 const Materials = () => {
+  const [isFormVisible, setIsFormVisible] = React.useState(false);
+
+  const handleAdd = () => {
+    setIsFormVisible(true);
+  }
+  
+  const handleClose = () => {
+    setIsFormVisible(false);
+  }
+
+  const handleSubmit = (formData) => {
+    console.log(formData);
+    setIsFormVisible(false);
+  }
+
   const data = [
     { id: 1, name: "Material 1", quantity: 10 },
     { id: 2, name: "Material 2", quantity: 20 },
@@ -26,12 +42,13 @@ const Materials = () => {
                     <Search />
                     <Button label="Go" onClick={() => alert("Search clicked")} type="search" />
                 </div>
-                <Button label="Add" onClick={() => alert("Add clicked")} type="add" />
+                <Button label="Add" onClick = {handleAdd} type="add" />                
                 <Button label="Delete" onClick={() => alert("Delete clicked")} type="delete" />
                 <Button label="Edit" onClick={() => alert("Edit clicked")} type="edit" />
                 <Button label="View" onClick={() => alert("View clicked")} type="view" />
             </div>
         </div>
+        {isFormVisible && <AddMaterialForm onClose={handleClose} onSubmit={handleSubmit} />}
     </div>
   );
 }
