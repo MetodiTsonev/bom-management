@@ -1,4 +1,3 @@
-// src/pages/Login.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
@@ -6,7 +5,6 @@ import './Login.css';
 function Login({ onLogin }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
 
@@ -22,14 +20,8 @@ function Login({ onLogin }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!username || !password) {
-      setError('Please fill in both fields');
-      return;
-    }
-
     const isAuthenticated = onLogin(username, password);
     if (isAuthenticated) {
-      setError('');
       if (rememberMe) {
         localStorage.setItem('savedUsername', username);
         localStorage.setItem('savedPassword', password);
@@ -39,12 +31,8 @@ function Login({ onLogin }) {
       }
       navigate('/');
     } else {
-      setError('Invalid username or password');
+      alert('Invalid username or password');
     }
-  };
-
-  const handleRememberMeChange = () => {
-    setRememberMe(!rememberMe);
   };
 
   return (
@@ -59,8 +47,8 @@ function Login({ onLogin }) {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           placeholder="Enter your username"
+          required // Default HTML5 validation
         />
-        {error && !username && <span className="error-text">Please fill this field</span>}
 
         <label htmlFor="password">Password</label>
         <input
@@ -69,8 +57,8 @@ function Login({ onLogin }) {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Enter your password"
+          required // Default HTML5 validation
         />
-        {error && !password && <span className="error-text">Please fill this field</span>}
 
         {/* Flex container for Remember Me and Log in button */}
         <div className="form-options">
@@ -79,14 +67,13 @@ function Login({ onLogin }) {
               type="checkbox"
               id="rememberMe"
               checked={rememberMe}
-              onChange={handleRememberMeChange}
+              onChange={() => setRememberMe(!rememberMe)}
             />
             <label htmlFor="rememberMe">Remember Me</label>
           </div>
           <button type="submit" className="login-button">Log in</button>
         </div>
       </form>
-      {error && <p className="error-text">{error}</p>}
     </div>
   );
 }
