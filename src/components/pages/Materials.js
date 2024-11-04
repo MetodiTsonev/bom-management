@@ -11,6 +11,12 @@ import AddMaterialForm from "./AddMaterialForm";
 const Materials = () => {
   const [isFormVisible, setIsFormVisible] = React.useState(false);
 
+  const [data, setData] = React.useState([
+    { id: 1, name: "Material 1", description: 'material1' ,amount: 10 },
+    { id: 2, name: "Material 2", description: 'material2' ,amount: 20 },
+    { id: 3, name: "Material 3", description: 'material3' ,amount: 30 },
+  ]);
+
   const handleAdd = () => {
     setIsFormVisible(true);
   }
@@ -20,15 +26,9 @@ const Materials = () => {
   }
 
   const handleSubmit = (formData) => {
-    console.log(formData);
+    setData(prevData => [...prevData, formData]);
     setIsFormVisible(false);
   }
-
-  const data = [
-    { id: 1, name: "Material 1", quantity: 10 },
-    { id: 2, name: "Material 2", quantity: 20 },
-    { id: 3, name: "Material 3", quantity: 30 },
-  ];
 
   return (
     <div>
