@@ -22,7 +22,7 @@ body, html {
 }
 
 .login-title {
-  font-size: 3rem; /* Increased font size for title */
+  font-size: 3rem;
   font-weight: bold;
   margin-bottom: 10px;
   text-align: center;
@@ -30,7 +30,7 @@ body, html {
 
 .login-subtitle {
   margin-bottom: 30px;
-  font-size: 1.2rem; /* Slightly larger subtitle */
+  font-size: 1.2rem;
   color: #555;
   text-align: center;
 }
@@ -38,31 +38,31 @@ body, html {
 .login-form {
   display: flex;
   flex-direction: column;
-  width: 450px; /* Increased width for a larger form */
-  padding: 30px; /* Increased padding for a spacious feel */
+  width: 450px;
+  padding: 30px;
   border: 1px solid #ccc;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Slightly larger shadow */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   background-color: #f9f9f9;
 }
 
 .login-form label {
   font-weight: bold;
   margin-top: 20px;
-  font-size: 1.1rem; /* Slightly larger label font */
+  font-size: 1.1rem;
   color: #333;
 }
 
-.login-form input {
+.login-form input[type="text"],
+.login-form input[type="password"] {
   width: 100%;
-  padding: 14px; /* Larger padding for inputs */
+  padding: 14px;
   margin-top: 8px;
   margin-bottom: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  font-size: 1.1rem; /* Larger font size for input text */
+  font-size: 1.1rem;
   color: #333;
-  box-sizing: border-box;
 }
 
 .login-form input:focus {
@@ -76,9 +76,9 @@ body, html {
 }
 
 .login-button {
-  width: 120px; /* Slightly wider button */
+  width: 120px;
   padding: 12px;
-  font-size: 1.1rem; /* Larger font size for button */
+  font-size: 1.1rem;
   font-weight: bold;
   text-align: center;
   border-radius: 5px;
@@ -93,13 +93,6 @@ body, html {
   background-color: #333;
 }
 
-.error-text {
-  color: #e0a800;
-  font-size: 0.9rem;
-  margin-top: -10px;
-  margin-bottom: 10px;
-}
-
 .form-options {
   display: flex;
   justify-content: space-between;
@@ -110,8 +103,17 @@ body, html {
 .remember-me {
   display: flex;
   align-items: center;
+  gap: 8px;
 }
 
-.remember-me input {
-  margin-right: 8px;
+.remember-me input[type="checkbox"] {
+  width: 18px; /* Specify width and height to ensure alignment */
+  height: 18px;
+  margin: 0; /* Remove any default margin */
+}
+
+.remember-me label {
+  font-size: 1rem;
+  color: #333;
+  line-height: 1; /* Ensure label and checkbox align vertically */
 }
