@@ -30,12 +30,23 @@ const Materials = () => {
     setIsFormVisible(false);
   }
 
+  const [selectedRow, setSelectedRow] = React.useState(null);
+  const handleDelete = () => {
+    if (selectedRow !== null){
+      setData(prevData => prevData.filter((_, i) => i !== selectedRow));
+      setSelectedRow(null);
+    }
+    else {
+      alert("Please select a row to delete");
+    }
+  }
+
   return (
     <div>
         <Description text = 'Materials' description= 'The material page is used for configuring material details' />
         <div className="container">
             <div className="left-column">
-                <Table data={data} />
+                <Table data={data} onRowSelect={setSelectedRow}/>
             </div>
             <div className="right-column">
                 <div className="searchField">
@@ -43,7 +54,7 @@ const Materials = () => {
                     <Button id-='search' label="Go" onClick={() => alert("Search clicked")} type="search" />
                 </div>
                 <Button label="Add" onClick = {handleAdd} type="add" />
-                <Button label="Delete" onClick={() => alert("Delete clicked")} type="delete" />
+                <Button label="Delete" onClick={handleDelete} type="delete" />
                 <Button label="Edit" onClick={() => alert("Edit clicked")} type="edit" />
                 <Button label="View" onClick={() => alert("View clicked")} type="view" />
             </div>
