@@ -9,14 +9,16 @@ import "./PageStyle.css";
 import MaterialForm from "./MaterialForm";
 
 const Materials = () => {
+  const initialData = [
+    { id: 1, name: "Material 1", description: 'material1', amount: 10 },
+    { id: 2, name: "Material 2", description: 'material2', amount: 20 },
+    { id: 3, name: "Material 3", description: 'material3', amount: 30 },
+  ];
+
   const [isAddVisible, setIsAddVisible] = React.useState(false);
   const [isEditVisible, setIsEditVisible] = React.useState(false);
-
-  const [data, setData] = React.useState([
-    { id: 1, name: "Material 1", description: 'material1' ,amount: 10 },
-    { id: 2, name: "Material 2", description: 'material2' ,amount: 20 },
-    { id: 3, name: "Material 3", description: 'material3' ,amount: 30 },
-  ]);
+  const [searchValue, setSearchValue] = React.useState('');
+  const [data, setData] = React.useState(initialData);
 
   const handleAdd = () => {
     setIsAddVisible(true);
@@ -59,17 +61,31 @@ const Materials = () => {
     }
   }
 
+  const handleSearch = () => {
+    setData(data.filter(row =>
+      Object.values(row).some(value =>
+        value.toString().toLowerCase().includes(searchValue.toLowerCase())
+      )
+    ));
+  };
+  
+  const handleClear = () => { 
+    setSearchValue('');
+    setData(initialData);
+  }
+
   return (
     <div>
         <Description text = 'Materials' description= 'The material page is used for configuring material details' />
         <div className="container">
             <div className="left-column">
                 <Table data={data} onRowSelect={setSelectedRow}/>
+                <a href="#" onClick={handleClear} className="clear">Clear filters</a>
             </div>
             <div className="right-column">
                 <div className="searchField">
-                    <Search />
-                    <Button id-='search' label="Go" onClick={() => alert("Search clicked")} type="search" />
+                    <Search onSearch={setSearchValue} />
+                    <Button label="Go" onClick={handleSearch} type="search" />
                 </div>
                 <Button label="Add" onClick = {handleAdd} type="add" />
                 <Button label="Delete" onClick={handleDelete} type="delete" />
