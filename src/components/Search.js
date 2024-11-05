@@ -1,12 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import './Search.css';
 
-const Search = ({ search, setSearch }) => {
+const Search = ({ onSearch }) => {
+    const [search, setSearch] = useState('');
+
+    const handleChange = (e) => {
+        setSearch(e.target.value);
+        onSearch(e.target.value);
+    };
+
     return (
         <input
         type="text"
         value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={handleChange}
         placeholder="Search..."
         />
     );

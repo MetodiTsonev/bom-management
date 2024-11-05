@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Table.css';
 
-const Table = ({ data }) => {
+const Table = ({ data, onRowSelect }) => {
   const [selectedRow, setSelectedRow] = useState(null);
 
   if (!data || data.length === 0) {
@@ -13,6 +13,7 @@ const Table = ({ data }) => {
 
   const handleRowClick = (rowIndex) => {
     setSelectedRow(rowIndex);
+    onRowSelect(rowIndex);
   };
 
   return (
