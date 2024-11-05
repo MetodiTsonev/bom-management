@@ -6,10 +6,11 @@ import Search from "../Search";
 import Description from "../Description";
 
 import "./PageStyle.css";
-import AddMaterialForm from "./AddMaterialForm";
+import MaterialForm from "./MaterialForm";
 
 const Materials = () => {
-  const [isFormVisible, setIsFormVisible] = React.useState(false);
+  const [isAddVisible, setIsAddVisible] = React.useState(false);
+  const [isEditVisible, setIsEditVisible] = React.useState(false);
 
   const [data, setData] = React.useState([
     { id: 1, name: "Material 1", description: 'material1' ,amount: 10 },
@@ -18,16 +19,24 @@ const Materials = () => {
   ]);
 
   const handleAdd = () => {
-    setIsFormVisible(true);
+    setIsAddVisible(true);
   }
 
   const handleClose = () => {
-    setIsFormVisible(false);
+    setIsAddVisible(false);
+    setIsEditVisible(false);
   }
 
   const handleSubmit = (formData) => {
-    setData(prevData => [...prevData, formData]);
-    setIsFormVisible(false);
+    if(isAddVisible) {
+      setData(prevData => [...prevData, formData]);
+      setIsAddVisible(false);
+    }
+
+    else if(isEditVisible) {
+      setData(prevData => prevData.map((row, i) => i === selectedRow ? formData : row));
+      setIsEditVisible(false);
+    }
   }
 
   const [selectedRow, setSelectedRow] = React.useState(null);
@@ -38,6 +47,15 @@ const Materials = () => {
     }
     else {
       alert("Please select a row to delete");
+    }
+  }
+
+  const handleEdit = () => {
+    if (selectedRow !== null){
+      setIsEditVisible(true);
+    }
+    else {
+      alert("Please select a row to edit");
     }
   }
 
@@ -55,11 +73,12 @@ const Materials = () => {
                 </div>
                 <Button label="Add" onClick = {handleAdd} type="add" />
                 <Button label="Delete" onClick={handleDelete} type="delete" />
-                <Button label="Edit" onClick={() => alert("Edit clicked")} type="edit" />
+                <Button label="Edit" onClick={handleEdit} type="edit" />
                 <Button label="View" onClick={() => alert("View clicked")} type="view" />
             </div>
         </div>
-        {isFormVisible && <AddMaterialForm onClose={handleClose} onSubmit={handleSubmit} />}
+        {isAddVisible && <MaterialForm onClose={handleClose} onSubmit={handleSubmit} editObject={null} />}
+        {isEditVisible && <MaterialForm onClose={handleClose} onSubmit={handleSubmit} editObject={data[selectedRow]} />}
     </div>
   );
 }

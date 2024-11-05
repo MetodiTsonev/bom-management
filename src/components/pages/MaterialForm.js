@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import './AddMaterialForm.css';
+import './MaterialForm.css';
 
-const AddMaterialForm = ({ onClose, onSubmit }) => {
-    const [formData, setFormData] = useState({
+const MaterialForm = ({ onClose, onSubmit, editObject }) => {
+    const [formData, setFormData] = useState(editObject === null ? {
         id: '',
         name: '',
         description: '',
         amount: ''
-    });
+    } : editObject);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -44,7 +44,7 @@ const AddMaterialForm = ({ onClose, onSubmit }) => {
                     <input type="text" name="amount" value={formData.amount} onChange={handleChange} required />
                 </label>
                 <div className="buttons">
-                    <button type="submit">Submit</button>
+                    <button type="submit">Save</button>
                     <button type="button" onClick={onClose}>Cancel</button>
                 </div>
             </form>
@@ -52,4 +52,4 @@ const AddMaterialForm = ({ onClose, onSubmit }) => {
     );
 };
 
-export default AddMaterialForm;
+export default MaterialForm;
