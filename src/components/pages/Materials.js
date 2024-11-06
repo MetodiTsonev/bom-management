@@ -13,26 +13,40 @@ const Materials = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
+  const [editData, setEditData] = useState(null);
 
   const fetchData = () => {
     fetch('http://localhost:5001/api/data')
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then(data => {
+        console.log("Fetched data:", data); // Log to verify data
         setData(data);
         setFilteredData(data);
       })
       .catch(error => console.error("Error fetching materials:", error));
   };
 
+
   useEffect(() => {
-    fetchData();
+    fetchData(); // Fetch data on component mount
   }, []);
 
-  const handleAdd = () => setIsAddVisible(true);
+  
+
+  const handleAdd = () => {
+    setIsAddVisible(true);
+    setEditData(null); // Ensure no edit data is set when adding new material
+  };
 
   const handleClose = () => {
     setIsAddVisible(false);
     setIsEditVisible(false);
+    setEditData(null);
   };
 
   const handleSubmit = (material) => {
@@ -58,11 +72,26 @@ const Materials = () => {
 
   const handleEdit = () => {
     if (selectedRow !== null) {
-      setIsEditVisible(true); // Open form in edit mode
+      const materialId = data[selectedRow].MATERIAL_ID;
+
+      fetch(`http://localhost:5001/api/data/${materialId}`)
+        .then(async response => {
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Failed to fetch material data: ${errorText}`);
+          }
+          return response.json();
+        })
+        .then(materialData => {
+          setEditData(materialData);  // Set the fetched data for editing
+          setIsEditVisible(true);     // Open the form
+        })
+        .catch(error => console.error("Error fetching material data for edit:", error));
     } else {
       alert("Please select a row to edit");
     }
   };
+
 
   return (
     <div>
@@ -88,7 +117,7 @@ const Materials = () => {
         </div>
       </div>
       {isAddVisible && <MaterialForm onClose={handleClose} onSubmit={handleSubmit} editObject={null} />}
-      {isEditVisible && <MaterialForm onClose={handleClose} onSubmit={handleSubmit} editObject={data[selectedRow]} />}
+      {isEditVisible && <MaterialForm onClose={handleClose} onSubmit={handleSubmit} editObject={editData} />}
     </div>
   );
 };

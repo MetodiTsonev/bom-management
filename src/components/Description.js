@@ -3,9 +3,9 @@ import './Description.css';
 
 const Title = ({text, description}) => {
     return (
-        <div class="description">
-            <div class="title">{text}</div>
-            <div class="descriptionText">{description}</div>
+        <div className="description">
+            <div className="title">{text}</div>
+            <div className="descriptionText">{description}</div>
         </div>
     );
 };

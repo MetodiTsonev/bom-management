@@ -31,82 +31,151 @@ sql.connect(sqlConfig, (err) => {
   }
 });
 
-// Define a sample API endpoint to get data
+
 app.get('/api/data', async (req, res) => {
   try {
-    const result = await sql.query`SELECT * FROM Materials`; // Replace with your actual SQL query
-    res.json(result.recordset); // Sends the results as JSON
+    const result = await sql.query`SELECT * FROM Materials`;
+    res.json(result.recordset);
   } catch (err) {
     console.error('Error querying database:', err);
     res.status(500).send('Server Error');
   }
 });
 
-// Endpoint to add a new material
+
+
+
+// Endpoint to add a new material with price and price date
 app.post('/api/materials', async (req, res) => {
-  const { id, name, description, measure } = req.body; // Changed amount to measure
+  const { id, name, description, measure, price, priceDate } = req.body;
 
   try {
-      // Using parameterized query to prevent SQL injection and handle parameters safely
-      const query = `
+      // Insert into Materials table
+      const materialQuery = `
           INSERT INTO Materials (MATERIAL_ID, MATERIAL_NAME, MATERIAL_DESCRIPTION, MATERIAL_MEASURE)
           VALUES (@id, @name, @description, @measure)
       `;
 
-      const request = new sql.Request();
-      request.input('id', sql.Int, id);
-      request.input('name', sql.NVarChar, name);
-      request.input('description', sql.NVarChar, description);
-      request.input('measure', sql.NVarChar, measure);
+      const materialRequest = new sql.Request();
+      materialRequest.input('id', sql.Int, id);
+      materialRequest.input('name', sql.NVarChar, name);
+      materialRequest.input('description', sql.NVarChar, description);
+      materialRequest.input('measure', sql.NVarChar, measure);
+      await materialRequest.query(materialQuery);
 
-      const result = await request.query(query);
+      // Insert into Price_List table
+      const priceQuery = `
+          INSERT INTO Price_List (MATERIAL_ID, PRICE_PRICE, PRICE_DATE)
+          VALUES (@id, @price, @priceDate)
+      `;
 
-      res.status(201).json({ message: 'Material added successfully', result });
+      const priceRequest = new sql.Request();
+      priceRequest.input('id', sql.Int, id);
+      priceRequest.input('price', sql.Decimal(10, 2), price);
+      priceRequest.input('priceDate', sql.Date, priceDate);
+      await priceRequest.query(priceQuery);
+
+      res.status(201).json({ message: 'Material and price added successfully' });
   } catch (error) {
-      console.error('Error inserting material:', error.message); // Log specific error message
-      res.status(500).json({ error: 'Database insertion failed', details: error.message }); // Send error details
+      console.error('Error inserting material and price:', error.message);
+      res.status(500).json({ error: 'Database insertion failed', details: error.message });
   }
 });
 
-// Endpoint to delete a material
+// Endpoint to delete a material and its associated price record
 app.delete('/api/data/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const result = await sql.query`DELETE FROM Materials WHERE MATERIAL_ID = ${id}`;
-    if (result.rowsAffected[0] > 0) {
-      res.status(200).json({ message: 'Material deleted successfully' });
-    } else {
-      res.status(404).json({ message: 'Material not found' });
-    }
+      // Delete from Price_List table first
+      const priceQuery = `
+          DELETE FROM Price_List
+          WHERE MATERIAL_ID = @id
+      `;
+      const priceRequest = new sql.Request();
+      priceRequest.input('id', sql.Int, id);
+      await priceRequest.query(priceQuery);
+
+      // Then delete from Materials table
+      const materialQuery = `
+          DELETE FROM Materials
+          WHERE MATERIAL_ID = @id
+      `;
+      const materialRequest = new sql.Request();
+      materialRequest.input('id', sql.Int, id);
+      await materialRequest.query(materialQuery);
+
+      res.status(200).json({ message: 'Material and associated price record deleted successfully' });
   } catch (error) {
-    console.error('Error deleting material:', error);
-    res.status(500).json({ error: 'Failed to delete material' });
+      console.error('Error deleting material and price record:', error.message);
+      res.status(500).json({ error: 'Failed to delete material and price record', details: error.message });
   }
 });
 
-// Endpoint to update a material
+
+// Endpoint to update a material with price and price date
 app.put('/api/data/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, description, measure } = req.body;
+  const { name, description, measure, price, priceDate } = req.body;
 
   try {
-      const result = await sql.query`
+      // Update the Materials table
+      const materialQuery = `
           UPDATE Materials
-          SET MATERIAL_NAME = ${name}, MATERIAL_DESCRIPTION = ${description}, MATERIAL_MEASURE = ${measure}
-          WHERE MATERIAL_ID = ${id}
+          SET MATERIAL_NAME = @name, MATERIAL_DESCRIPTION = @description, MATERIAL_MEASURE = @measure
+          WHERE MATERIAL_ID = @id
       `;
+      const materialRequest = new sql.Request();
+      materialRequest.input('id', sql.Int, id);
+      materialRequest.input('name', sql.NVarChar, name);
+      materialRequest.input('description', sql.NVarChar, description);
+      materialRequest.input('measure', sql.NVarChar, measure);
+      await materialRequest.query(materialQuery);
 
-      if (result.rowsAffected[0] > 0) {
-          res.status(200).json({ message: 'Material updated successfully' });
-      } else {
-          res.status(404).json({ message: 'Material not found' });
-      }
+      // Update the Price_List table
+      const priceQuery = `
+          UPDATE Price_List
+          SET PRICE_PRICE = @price, PRICE_DATE = @priceDate
+          WHERE MATERIAL_ID = @id
+      `;
+      const priceRequest = new sql.Request();
+      priceRequest.input('id', sql.Int, id);
+      priceRequest.input('price', sql.Decimal(10, 2), price);
+      priceRequest.input('priceDate', sql.Date, priceDate);
+      await priceRequest.query(priceQuery);
+
+      res.status(200).json({ message: 'Material and price updated successfully' });
   } catch (error) {
-      console.error('Error updating material:', error);
-      res.status(500).json({ error: 'Failed to update material' });
+      console.error('Error updating material and price:', error.message);
+      res.status(500).json({ error: 'Failed to update material and price' });
   }
 });
+
+// Endpoint to get a specific material with price details
+app.get('/api/data/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Query for the material data
+    const materialResult = await sql.query`SELECT * FROM Materials WHERE MATERIAL_ID = ${id}`;
+    if (materialResult.recordset.length === 0) {
+      return res.status(404).json({ error: "Material not found" });
+    }
+
+    // Query for the price data
+    const priceResult = await sql.query`SELECT * FROM Price_List WHERE MATERIAL_ID = ${id}`;
+    const materialData = materialResult.recordset[0];
+    materialData.price = priceResult.recordset[0]?.PRICE_PRICE || null;
+    materialData.priceDate = priceResult.recordset[0]?.PRICE_DATE || null;
+
+    res.json(materialData);
+  } catch (err) {
+    console.error('Error querying material by ID:', err);
+    res.status(500).send('Server Error');
+  }
+});
+
+
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);

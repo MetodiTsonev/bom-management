@@ -5,10 +5,9 @@ const Table = ({ data, onRowSelect }) => {
   const [selectedRow, setSelectedRow] = useState(null);
 
   if (!data || data.length === 0) {
-    return <p>No data to display</p>
+    return <p>No data to display</p>;
   }
 
-  // Dynamically get column headers from the first data object keys
   const headers = Object.keys(data[0]);
 
   const handleRowClick = (rowIndex) => {
@@ -20,7 +19,7 @@ const Table = ({ data, onRowSelect }) => {
     <table className="table">
       <thead>
         <tr>
-          <th></th> {/* No header needed here */}
+          <th></th>
           {headers.map((header) => (
             <th key={header}>{header}</th>
           ))}
