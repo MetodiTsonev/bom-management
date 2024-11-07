@@ -5,6 +5,7 @@ import Search from "../Search";
 import Description from "../Description";
 import "./PageStyle.css";
 import MaterialForm from "./MaterialForm";
+import ViewForm from "./ViewForm";
 
 const Materials = () => {
   const [isAddVisible, setIsAddVisible] = useState(false);
