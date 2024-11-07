@@ -15,6 +15,7 @@ const Materials = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [editData, setEditData] = useState(null);
+  const [isViewVisible, setIsViewVisible] = useState(false);
 
   const fetchData = () => {
     fetch('http://localhost:5001/api/data')
@@ -47,6 +48,7 @@ const Materials = () => {
   const handleClose = () => {
     setIsAddVisible(false);
     setIsEditVisible(false);
+    setIsViewVisible(false);
     setEditData(null);
   };
 
@@ -119,6 +121,7 @@ const Materials = () => {
       </div>
       {isAddVisible && <MaterialForm onClose={handleClose} onSubmit={handleSubmit} editObject={null} />}
       {isEditVisible && <MaterialForm onClose={handleClose} onSubmit={handleSubmit} editObject={editData} />}
+      {isViewVisible && <ViewForm onClose={handleClose} viewObject={data[selectedRow]} />}
     </div>
   );
 };
