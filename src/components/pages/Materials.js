@@ -112,7 +112,7 @@ const Materials = () => {
       <div className="container">
         <div className="left-column">
           <Table data={filteredData} onRowSelect={setSelectedRow} />
-          <button onClick={() => setFilteredData(data)} className="clear">Clear filters</button>
+          <Button label = "Clear filters" onClick={() => setFilteredData(data)} type="clear"/>
         </div>
         <div className="right-column">
           <div className="searchField">
