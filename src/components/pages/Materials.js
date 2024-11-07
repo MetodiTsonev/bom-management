@@ -7,6 +7,7 @@ import Description from "../Description";
 
 import "./PageStyle.css";
 import MaterialForm from "./MaterialForm";
+import ViewForm from "./ViewForm";
 
 const Materials = () => {
   const initialData = [
@@ -16,6 +17,7 @@ const Materials = () => {
   ];
 
   const [isAddVisible, setIsAddVisible] = React.useState(false);
+  const [isViewVisible, setIsViewVisible] = React.useState(false);
   const [isEditVisible, setIsEditVisible] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState('');
   const [data, setData] = React.useState(initialData);
@@ -27,6 +29,7 @@ const Materials = () => {
   const handleClose = () => {
     setIsAddVisible(false);
     setIsEditVisible(false);
+    setIsViewVisible(false);
   }
 
   const handleSubmit = (formData) => {
@@ -57,7 +60,7 @@ const Materials = () => {
       setIsEditVisible(true);
     }
     else {
-      alert("Please select a row to edit");
+      alert("Please select a material to edit");
     }
   }
 
@@ -72,6 +75,15 @@ const Materials = () => {
   const handleClear = () => { 
     setSearchValue('');
     setData(initialData);
+  }
+
+  const handleView = () => {
+    if (selectedRow !== null){
+      setIsViewVisible(true);
+    }
+    else {
+      alert("Please material a row to view");
+    }
   }
 
   return (
@@ -90,11 +102,12 @@ const Materials = () => {
                 <Button label="Add" onClick = {handleAdd} type="add" />
                 <Button label="Delete" onClick={handleDelete} type="delete" />
                 <Button label="Edit" onClick={handleEdit} type="edit" />
-                <Button label="View" onClick={() => alert("View clicked")} type="view" />
+                <Button label="View" onClick={handleView} type="view" />
             </div>
         </div>
         {isAddVisible && <MaterialForm onClose={handleClose} onSubmit={handleSubmit} editObject={null} />}
         {isEditVisible && <MaterialForm onClose={handleClose} onSubmit={handleSubmit} editObject={data[selectedRow]} />}
+        {isViewVisible && <ViewForm onClose={handleClose} viewObject={data[selectedRow]} />}
     </div>
   );
 }
