@@ -38,7 +38,7 @@ const Materials = () => {
     fetchData(); // Fetch data on component mount
   }, []);
 
-  
+
 
   const handleAdd = () => {
     setIsAddVisible(true);
@@ -86,6 +86,7 @@ const Materials = () => {
           return response.json();
         })
         .then(materialData => {
+          console.log("Fetched material data for editing:", materialData); // Debugging log
           setEditData(materialData);  // Set the fetched data for editing
           setIsEditVisible(true);     // Open the form
         })
@@ -95,10 +96,11 @@ const Materials = () => {
     }
   };
 
+
   const handleView = () => {
     if (selectedRow !== null) {
       setIsViewVisible(true);
-    } 
+    }
     else {
       alert("Please select a row to view");
     }

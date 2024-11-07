@@ -14,16 +14,22 @@ const MaterialForm = ({ onClose, onSubmit, editObject }) => {
   // Populate form data when editing an existing material
   useEffect(() => {
     if (editObject) {
+      console.log("Edit object data in form:", editObject); // Debugging log
       setFormData({
         id: editObject.MATERIAL_ID || '',
         name: editObject.MATERIAL_NAME || '',
         description: editObject.MATERIAL_DESCRIPTION || '',
         measure: editObject.MATERIAL_MEASURE || '',
-        price: editObject.PRICE_PRICE || '',
-        priceDate: editObject.PRICE_DATE || ''
+        price: editObject.price || '',
+        priceDate: editObject.priceDate ? editObject.priceDate.split('T')[0] : '' // Format date to yyyy-MM-dd
       });
     }
   }, [editObject]);
+
+  useEffect(() => {
+    console.log("Form data:", formData); // Debugging log
+  }, [formData]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
