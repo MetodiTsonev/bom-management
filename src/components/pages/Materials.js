@@ -95,6 +95,14 @@ const Materials = () => {
     }
   };
 
+  const handleView = () => {
+    if (selectedRow !== null) {
+      setIsViewVisible(true);
+    } 
+    else {
+      alert("Please select a row to view");
+    }
+  }
 
   return (
     <div>
@@ -116,7 +124,7 @@ const Materials = () => {
           <Button label="Add" onClick={handleAdd} type="add" />
           <Button label="Delete" onClick={handleDelete} type="delete" />
           <Button label="Edit" onClick={handleEdit} type="edit" />
-          <Button label="View" onClick={() => alert("View clicked")} type="view" />
+          <Button label="View" onClick={handleView} type="view" />
         </div>
       </div>
       {isAddVisible && <MaterialForm onClose={handleClose} onSubmit={handleSubmit} editObject={null} />}
