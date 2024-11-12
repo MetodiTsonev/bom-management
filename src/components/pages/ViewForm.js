@@ -27,7 +27,7 @@ const ViewForm = ({ onClose, viewObject }) => {
             <h1>View Material</h1>
             <div className="container">
                 <div className="left-column">
-                    <h2>Material info</h2>
+                    <h1>Material info</h1>
                     <form>
                         <label>
                             ID:
@@ -70,6 +70,7 @@ const ViewForm = ({ onClose, viewObject }) => {
                     </form>
                 </div>
                 <div className="right-column">
+                    <h1>Product list</h1>
                     {/* TODO add the products, that contain the material in this side of the table */}
                 </div>
             </div>
