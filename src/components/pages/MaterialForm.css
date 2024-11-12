@@ -17,6 +17,7 @@
     border: 1px solid #ccc;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
     z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
 }
 
 .popup-form form {
@@ -40,7 +41,8 @@
 }
 
 .popup-form .buttons {
-    width: 100%;
+    width: 80%;
+    left: 20%;
     margin-top: 2rem;
     display: flex;
     justify-content: space-between;
@@ -53,14 +55,7 @@
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
-    z-index: 999; 
-}
-
-.popup-form {
-    animation: fadeIn 0.3s ease-out;
-}
-
-.popup-overlay {
+    z-index: 999;
     animation: fadeIn 0.3s ease-out;
 }
 
