@@ -106,22 +106,31 @@ const Materials = () => {
     }
   }
 
+  const handleClear = () => {
+    setFilteredData(data);
+    setSearchValue(''); //TODO doesn't work
+  }
+
+  const handleSearch = () => {
+    setFilteredData(data.filter(row =>
+        Object.values(row).some(value =>
+            value.toString().toLowerCase().includes(searchValue.toLowerCase())
+        )
+    ));
+  }
+
   return (
     <div>
       <Description text='Materials' description='The material page is used for configuring material details' />
       <div className="container">
         <div className="left-column">
           <Table data={filteredData} onRowSelect={setSelectedRow} />
-          <Button label = "Clear filters" onClick={() => setFilteredData(data)} type="clear"/>
+          <Button label = "Clear filters" onClick={handleClear} type="clear"/>
         </div>
         <div className="right-column">
           <div className="searchField">
             <Search onSearch={setSearchValue} />
-            <Button label="Go" onClick={() => setFilteredData(data.filter(row =>
-              Object.values(row).some(value =>
-                value.toString().toLowerCase().includes(searchValue.toLowerCase())
-              )
-            ))} type="search" />
+            <Button label="Go" onClick={handleSearch} type="search" />
           </div>
           <Button label="Add" onClick={handleAdd} type="add" />
           <Button label="Delete" onClick={handleDelete} type="delete" />
