@@ -34,7 +34,11 @@ sql.connect(sqlConfig, (err) => {
 
 app.get('/api/data', async (req, res) => {
   try {
-    const result = await sql.query`SELECT * FROM Materials`;
+    const result = await sql.query`
+      SELECT m.*, p.PRICE_PRICE, p.PRICE_DATE
+      FROM Materials m
+      LEFT JOIN Price_List p ON m.MATERIAL_ID = p.MATERIAL_ID
+    `;
     res.json(result.recordset);
   } catch (err) {
     console.error('Error querying database:', err);

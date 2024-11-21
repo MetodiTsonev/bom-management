@@ -8,7 +8,7 @@ const Table = ({ data, onRowSelect }) => {
     return <p>No data to display</p>;
   }
 
-  const headers = Object.keys(data[0]);
+  const headers = {ID: `MATERIAL_ID`, Name: `MATERIAL_NAME`, Description: `MATERIAL_DESCRIPTION`, Measure: 'MATERIAL_MEASURE'}; //Object.keys(data[0]);
 
   const handleRowClick = (rowIndex) => {
     setSelectedRow(rowIndex);
@@ -20,7 +20,7 @@ const Table = ({ data, onRowSelect }) => {
       <thead>
         <tr>
           <th></th>
-          {headers.map((header) => (
+          {Object.keys(headers).map((header) => (
             <th key={header}>{header}</th>
           ))}
         </tr>
@@ -36,8 +36,8 @@ const Table = ({ data, onRowSelect }) => {
                 onChange={() => handleRowClick(rowIndex)}
               />
             </td>
-            {headers.map((header) => (
-              <td key={header}>{row[header]}</td>
+            {Object.keys(headers).map((header) => (
+              <td key={header}>{row[headers[header]]}</td>
             ))}
           </tr>
         ))}
