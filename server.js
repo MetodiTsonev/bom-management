@@ -179,6 +179,63 @@ app.get('/api/data/:id', async (req, res) => {
   }
 });
 
+app.get('/api/expenses', async (req, res) => {
+  try {
+    const result = await sql.query`SELECT EXPENCE_ID, EXPENCE_NAME FROM EXPENCES`;
+    res.json(result.recordset);
+  } catch (err) {
+    console.error('Error fetching expenses:', err.message);
+    res.status(500).json({ error: 'Failed to fetch expenses' });
+  }
+});
+
+app.get('/api/expenses/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await sql.query`SELECT EXPENCE_ID, EXPENCE_NAME FROM EXPENCES WHERE EXPENCE_ID = ${id}`;
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ error: 'Expense not found' });
+    }
+    res.json(result.recordset[0]);
+  } catch (err) {
+    console.error('Error fetching expense by ID:', err.message);
+    res.status(500).json({ error: 'Failed to fetch expense' });
+  }
+});
+
+app.post('/api/expenses', async (req, res) => {
+  const { id, name } = req.body;
+  try {
+    await sql.query`INSERT INTO EXPENCES (EXPENCE_ID, EXPENCE_NAME) VALUES (${id}, ${name})`;
+    res.status(201).json({ message: 'Expense added successfully' });
+  } catch (err) {
+    console.error('Error adding expense:', err.message);
+    res.status(500).json({ error: 'Failed to add expense' });
+  }
+});
+
+app.put('/api/expenses/:id', async (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+  try {
+    await sql.query`UPDATE EXPENCES SET EXPENCE_NAME = ${name} WHERE EXPENCE_ID = ${id}`;
+    res.json({ message: 'Expense updated successfully' });
+  } catch (err) {
+    console.error('Error updating expense:', err.message);
+    res.status(500).json({ error: 'Failed to update expense' });
+  }
+});
+
+app.delete('/api/expenses/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await sql.query`DELETE FROM EXPENCES WHERE EXPENCE_ID = ${id}`;
+    res.json({ message: 'Expense deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting expense:', err.message);
+    res.status(500).json({ error: 'Failed to delete expense' });
+  }
+});
 
 
 app.listen(port, () => {
