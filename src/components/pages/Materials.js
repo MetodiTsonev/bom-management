@@ -17,6 +17,8 @@ const Materials = () => {
   const [editData, setEditData] = useState(null);
   const [isViewVisible, setIsViewVisible] = useState(false);
 
+  const headers = {ID: `MATERIAL_ID`, Name: `MATERIAL_NAME`, Description: `MATERIAL_DESCRIPTION`, Measure: 'MATERIAL_MEASURE'};
+
   const fetchData = () => {
     fetch('http://localhost:5001/api/data')
       .then(response => {
@@ -124,7 +126,7 @@ const Materials = () => {
       <Description text='Materials' description='The material page is used for configuring material details' />
       <div className="container">
         <div className="left-column">
-          <Table data={filteredData} onRowSelect={setSelectedRow} />
+          <Table data={filteredData} onRowSelect={setSelectedRow} headers={headers}/>
           <Button label = "Clear filters" onClick={handleClear} type="clear"/>
         </div>
         <div className="right-column">

@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import './Table.css';
 
-const Table = ({ data, onRowSelect }) => {
+const Table = ({ data, onRowSelect, headers }) => {
   const [selectedRow, setSelectedRow] = useState(null);
 
   if (!data || data.length === 0) {
     return <p>No data to display</p>;
   }
-
-  const headers = {ID: `MATERIAL_ID`, Name: `MATERIAL_NAME`, Description: `MATERIAL_DESCRIPTION`, Measure: 'MATERIAL_MEASURE'}; //Object.keys(data[0]);
 
   const handleRowClick = (rowIndex) => {
     setSelectedRow(rowIndex);

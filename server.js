@@ -46,6 +46,16 @@ app.get('/api/data', async (req, res) => {
   }
 });
 
+app.get('/api/products', async (req, res) => {
+    try {
+        const result = await sql.query`SELECT * FROM PRODUCT`;
+        res.json(result.recordset);
+    } catch (err) {
+        console.error('Error querying products:', err);
+        res.status(500).send('Server Error');
+    }
+});
+
 
 
 
