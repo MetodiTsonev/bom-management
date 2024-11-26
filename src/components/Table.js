@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Table.css';
 
-const Table = ({ data, onRowSelect, headers }) => {
+const Table = ({ data, onRowSelect, headers = {} }) => {
   const [selectedRow, setSelectedRow] = useState(null);
 
   if (!data || data.length === 0) {
@@ -10,22 +10,33 @@ const Table = ({ data, onRowSelect, headers }) => {
 
   const handleRowClick = (rowIndex) => {
     setSelectedRow(rowIndex);
-    onRowSelect(rowIndex);
+    if (onRowSelect) {
+      onRowSelect(rowIndex);
+    }
   };
+
+  // If no headers provided, create them from first data row
+  const effectiveHeaders = Object.keys(headers).length === 0 && data.length > 0
+    ? Object.keys(data[0]).reduce((acc, key) => ({ ...acc, [key]: key }), {})
+    : headers;
 
   return (
     <table className="table">
       <thead>
         <tr>
           <th></th>
-          {Object.keys(headers).map((header) => (
+          {Object.keys(effectiveHeaders).map((header) => (
             <th key={header}>{header}</th>
           ))}
         </tr>
       </thead>
       <tbody>
         {data.map((row, rowIndex) => (
-          <tr key={rowIndex} onClick={() => handleRowClick(rowIndex)} className={selectedRow === rowIndex ? 'selected' : ''}>
+          <tr
+            key={rowIndex}
+            onClick={() => handleRowClick(rowIndex)}
+            className={selectedRow === rowIndex ? 'selected' : ''}
+          >
             <td>
               <input
                 type="radio"
@@ -34,8 +45,8 @@ const Table = ({ data, onRowSelect, headers }) => {
                 onChange={() => handleRowClick(rowIndex)}
               />
             </td>
-            {Object.keys(headers).map((header) => (
-              <td key={header}>{row[headers[header]]}</td>
+            {Object.keys(effectiveHeaders).map((header) => (
+              <td key={header}>{row[effectiveHeaders[header]]}</td>
             ))}
           </tr>
         ))}

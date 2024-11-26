@@ -2,7 +2,6 @@
 const express = require('express');
 const sql = require('mssql');
 const cors = require('cors');
-
 const app = express();
 const port = 5001;
 
@@ -46,17 +45,37 @@ app.get('/api/data', async (req, res) => {
   }
 });
 
-app.get('/api/products', async (req, res) => {
-    try {
-        const result = await sql.query`SELECT * FROM PRODUCT`;
-        res.json(result.recordset);
-    } catch (err) {
-        console.error('Error querying products:', err);
-        res.status(500).send('Server Error');
-    }
+// app.get('/api/products', async (req, res) => {
+//     try {
+//         const pool = await sql.connect(config);
+//         const result = await pool.request()
+//             .query('SELECT * FROM PRODUCT');
+//         res.json(result.recordset);
+//     } catch (err) {
+//         console.error('Error fetching products:', err);
+//         res.status(500).send('Server Error');
+//     }
+// });
+
+// Endpoint to add a product
+app.post('/api/products', async (req, res) => {
+  const { id, name, description } = req.body;
+
+  if (!id || !name || !description) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
+  try {
+    await sql.query`
+      INSERT INTO Products (PRODUCT_ID, PRODUCT_NAME, PRODUCT_DESCRIPTION)
+      VALUES (${id}, ${name}, ${description})
+    `;
+    res.status(201).json({ message: 'Product added successfully' });
+  } catch (err) {
+    console.error('Error adding product:', err.message);
+    res.status(500).json({ error: 'Failed to add product' });
+  }
 });
-
-
 
 
 // Endpoint to add a new material with price and price date
@@ -189,17 +208,18 @@ app.get('/api/data/:id', async (req, res) => {
   }
 });
 
-app.get('/api/expenses', async (req, res) => {
+app.get('/api/expences', async (req, res) => {
   try {
-    const result = await sql.query`SELECT EXPENCE_ID, EXPENCE_NAME FROM EXPENCES`;
-    res.json(result.recordset);
+    const result = await sql.query`SELECT * FROM EXPENCES`;
+    res.setHeader('Content-Type', 'application/json'); // Ensure JSON response
+    res.json(result.recordset); // Send query result as JSON
   } catch (err) {
-    console.error('Error fetching expenses:', err.message);
-    res.status(500).json({ error: 'Failed to fetch expenses' });
+    console.error('Error fetching expenses:', err.message, err.stack); // Log the error
+    res.status(500).json({ error: 'Failed to fetch expenses', details: err.message });
   }
 });
 
-app.get('/api/expenses/:id', async (req, res) => {
+app.get('/api/expences/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const result = await sql.query`SELECT EXPENCE_ID, EXPENCE_NAME FROM EXPENCES WHERE EXPENCE_ID = ${id}`;
@@ -213,7 +233,7 @@ app.get('/api/expenses/:id', async (req, res) => {
   }
 });
 
-app.post('/api/expenses', async (req, res) => {
+app.post('/api/expences', async (req, res) => {
   const { id, name } = req.body;
   try {
     await sql.query`INSERT INTO EXPENCES (EXPENCE_ID, EXPENCE_NAME) VALUES (${id}, ${name})`;
@@ -221,18 +241,6 @@ app.post('/api/expenses', async (req, res) => {
   } catch (err) {
     console.error('Error adding expense:', err.message);
     res.status(500).json({ error: 'Failed to add expense' });
-  }
-});
-
-app.put('/api/expenses/:id', async (req, res) => {
-  const { id } = req.params;
-  const { name } = req.body;
-  try {
-    await sql.query`UPDATE EXPENCES SET EXPENCE_NAME = ${name} WHERE EXPENCE_ID = ${id}`;
-    res.json({ message: 'Expense updated successfully' });
-  } catch (err) {
-    console.error('Error updating expense:', err.message);
-    res.status(500).json({ error: 'Failed to update expense' });
   }
 });
 
@@ -248,6 +256,7 @@ app.delete('/api/expenses/:id', async (req, res) => {
 });
 
 
+
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
@@ -255,3 +264,5 @@ app.listen(port, () => {
 app.get('/', (req, res) => {
   res.send('Welcome to the backend server!');
 });
+
+module.exports = app;

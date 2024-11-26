@@ -31,7 +31,7 @@ function NavBar({ isAuthenticated, onLogout }) {
                 <Link to="/products" className="nav-links" onClick={toggleMenu}>Products</Link>
               </li>
               <li className="nav-item">
-                <Link to="/expenses" className="nav-links" onClick={toggleMenu}>Expenses</Link>
+                <Link to="/expenses" className="nav-links" onClick={toggleMenu}>Expences</Link>
               </li>
               <li className="nav-item">
                 <Link to="/bom" className="nav-links" onClick={toggleMenu}>BoM</Link>
