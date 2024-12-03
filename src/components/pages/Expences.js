@@ -6,6 +6,7 @@ import Button from '../Button';
 import ExpenceForm from './ExpenceForm';
 import ViewForm from "./ViewForm";
 import './PageStyle.css';
+import ExpenceViewForm from './ExpenceViewForm';
 
 function Expenses() {
   const [data, setData] = useState([]);
@@ -64,7 +65,7 @@ function Expenses() {
   const handleDelete = () => {
     if (selectedRow !== null) {
       const expenceId = data[selectedRow].EXPENCE_ID;
-      fetch(`http://localhost:5001/api/data/${expenceId}`, {
+      fetch(`http://localhost:5001/api/expences/${expenceId}`, {
         method: 'DELETE'
       })
       .then(() => {
@@ -110,7 +111,7 @@ function Expenses() {
         </div>
       </div>
       {isAddVisible && <ExpenceForm onClose={handleClose} onSubmit={handleSubmit}/>}
-      {isViewVisible && <ViewForm onClose={handleClose} viewObject={data[selectedRow]} />}
+      {isViewVisible && <ExpenceViewForm onClose={handleClose} viewObject={data[selectedRow]} />}
     </div>
   );
 };

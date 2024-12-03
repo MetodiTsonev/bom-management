@@ -244,7 +244,7 @@ app.post('/api/expences', async (req, res) => {
   }
 });
 
-app.delete('/api/expenses/:id', async (req, res) => {
+app.delete('/api/expences/:id', async (req, res) => {
   const { id } = req.params;
   try {
     await sql.query`DELETE FROM EXPENCES WHERE EXPENCE_ID = ${id}`;

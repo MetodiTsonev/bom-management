@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import NavBar from './components/NavBar';
 import Home from './components/pages/Home';
 import Products from './components/pages/Products';
-import Expenses from './components/pages/Expenses';
+import Expenses from './components/pages/Expences';
 import BOM from './components/pages/Bom';
 import Login from './components/pages/Login';
 import Materials from './components/pages/Materials';
