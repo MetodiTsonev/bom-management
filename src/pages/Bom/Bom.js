@@ -7,15 +7,13 @@ import "../PageStyle.css";
 
 const Bom = () => {
   const [isAddVisible, setIsAddVisible] = useState(false);
-  const [isEditVisible, setIsEditVisible] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
-  const [editData, setEditData] = useState(null);
   const [isViewVisible, setIsViewVisible] = useState(false);
 
-  const headers = {PRODUCT_ID: `PRODUCT ID`, MATERIAL_ID: `MATERIAL ID`, BOM_QTY: `QUANTITY`};
+  const headers = {PRODUCT_ID: `PRODUCT_ID`, MATERIAL_ID: `MATERIAL_ID`, BOM_QTY: `BOM_QTY`};
 
   const fetchData = () => {
     fetch('http://localhost:5001/api/bom')
@@ -38,24 +36,40 @@ useEffect(() => {
 }, []);
 
 const handleAdd = () => {
+  // TODO: ADD FUNCTIONALITY
   setIsAddVisible(true);
-  setEditData(null); // Ensure no edit data is set when adding new material
 };
 
 const handleClose = () => {
   setIsAddVisible(false);
-  setIsEditVisible(false);
   setIsViewVisible(false);
-  setEditData(null);
 };
 
 const handleSubmit = () => {
+  // TODO: SUBMIT FUNCTIONALITY
   fetchData(); // Refresh data after adding or updating a material
   handleClose(); // Close the form
 };
 
 const handleDelete = () => {
-  // TODO: DELETE FUNCTIONALITY
+  if (selectedRow !== null) {
+    const { PRODUCT_ID, MATERIAL_ID} = data[selectedRow];
+    fetch(`http://localhost:5001/api/bom/${PRODUCT_ID}/${MATERIAL_ID}`, {
+      method: 'DELETE',
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(() => {
+      fetchData(); // Refresh data after deletion
+    })
+    .catch(error => console.error("Error deleting BOM:", error));
+  } else {
+    console.error("No row selected for deletion");
+  }
 };
 
 const handleView = () => {
@@ -77,16 +91,12 @@ const handleSearch = () => {
   setFilteredData(filtered);
 };
 
-const handleRowClick = (index) => {
-  // TODO: SELECT ROW FUNCTIONALITY
-};
-
 return (
   <div>
     <Description text='Bill of Materials' description='The Bom Page is used to create Products and its specifications.'/>
     <div className="container">
       <div className="left-column">
-        <Table data={filteredData} onRowSelect={setSelectedRow} headers={headers}/>
+        <Table data={data} onRowSelect={setSelectedRow} headers={headers}/>
         <Button label="Clear filters" onClick={handleClear} type="clear"/>
       </div>
       <div className="right-column">
