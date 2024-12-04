@@ -20,8 +20,8 @@ const MaterialForm = ({ onClose, onSubmit, editObject }) => {
         name: editObject.MATERIAL_NAME || '',
         description: editObject.MATERIAL_DESCRIPTION || '',
         measure: editObject.MATERIAL_MEASURE || '',
-        price: editObject.price || '',
-        priceDate: editObject.priceDate ? editObject.priceDate.split('T')[0] : '' // Format date to yyyy-MM-dd
+        price: editObject.PRICE_PRICE || '',
+        priceDate: editObject.PRICE_DATE ? editObject.PRICE_DATE.split('T')[0] : '' // Format date to yyyy-MM-dd
       });
     }
   }, [editObject]);

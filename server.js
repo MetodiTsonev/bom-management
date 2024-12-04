@@ -30,14 +30,15 @@ sql.connect(sqlConfig, (err) => {
   }
 });
 
+//================================================================================================
+//                                          MATERIALS
+//================================================================================================
 
+// Endpoint to get the price and price date for a specific material
 app.get('/api/data', async (req, res) => {
   try {
-    const result = await sql.query`
-      SELECT m.*, p.PRICE_PRICE, p.PRICE_DATE
-      FROM Materials m
-      LEFT JOIN Price_List p ON m.MATERIAL_ID = p.MATERIAL_ID
-    `;
+    
+    const result = await sql.query`SELECT * FROM Materials`;
     res.json(result.recordset);
   } catch (err) {
     console.error('Error querying database:', err);
@@ -45,55 +46,27 @@ app.get('/api/data', async (req, res) => {
   }
 });
 
-// Get all products for the table
-app.get('/api/products', async (req, res) => {
-  try {
-    const result = await sql.query`SELECT * FROM PRODUCT`;
-    res.json(result.recordset);
-  } catch (err) {
-    console.error('Error fetching products:', err);
-    res.status(500).send('Server Error');
-  }
-});
-
-// Get the product's material and qty for the form
-app.get('/api/products/:id/materials', async (req, res) => {
+// Endpoint to get a specific material with price details
+app.get('/api/data/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
     const result = await sql.query`
-      SELECT m.MATERIAL_ID, m.MATERIAL_NAME, b.BOM_QTY
+      SELECT m.*, p.PRICE_PRICE, p.PRICE_DATE
       FROM Materials m
-      JOIN BOM b ON m.MATERIAL_ID = b.MATERIAL_ID
-      WHERE b.PRODUCT_ID = ${id}
+      LEFT JOIN Price_List p ON m.MATERIAL_ID = p.MATERIAL_ID
     `;
-    res.json(result.recordset);
+
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ error: "Material not found" });
+    }
+    
+    res.json(result.recordset[0]);
   } catch (err) {
-    console.error('Error querying materials for product:', err);
+    console.error('Error querying material by ID:', err);
     res.status(500).send('Server Error');
   }
 });
-
-// Endpoint to add a product
-app.post('/api/products', async (req, res) => {
-  const { id, name, description } = req.body;
-
-  if (!id || !name || !description) {
-    return res.status(400).json({ error: 'All fields are required' });
-  }
-
-  try {
-    await sql.query`
-      INSERT INTO Products (PRODUCT_ID, PRODUCT_NAME, PRODUCT_DESCRIPTION)
-      VALUES (${id}, ${name}, ${description})
-    `;
-    res.status(201).json({ message: 'Products added successfully' });
-  } catch (err) {
-    console.error('Error adding product:', err.message);
-    res.status(500).json({ error: 'Failed to add product' });
-  }
-});
-
 
 // Endpoint to add a new material with price and price date
 app.post('/api/materials', async (req, res) => {
@@ -162,7 +135,6 @@ app.delete('/api/data/:id', async (req, res) => {
   }
 });
 
-
 // Endpoint to update a material with price and price date
 app.put('/api/data/:id', async (req, res) => {
   const { id } = req.params;
@@ -201,29 +173,44 @@ app.put('/api/data/:id', async (req, res) => {
   }
 });
 
-// Endpoint to get a specific material with price details
-app.get('/api/data/:id', async (req, res) => {
-  const { id } = req.params;
 
+//================================================================================================
+//                                          PRODUCTS
+//================================================================================================
+
+// Get all products for the table
+app.get('/api/products', async (req, res) => {
   try {
-    // Query for the material data
-    const materialResult = await sql.query`SELECT * FROM Materials WHERE MATERIAL_ID = ${id}`;
-    if (materialResult.recordset.length === 0) {
-      return res.status(404).json({ error: "Material not found" });
-    }
-
-    // Query for the price data
-    const priceResult = await sql.query`SELECT * FROM Price_List WHERE MATERIAL_ID = ${id}`;
-    const materialData = materialResult.recordset[0];
-    materialData.price = priceResult.recordset[0]?.PRICE_PRICE || null;
-    materialData.priceDate = priceResult.recordset[0]?.PRICE_DATE || null;
-
-    res.json(materialData);
+    const result = await sql.query`SELECT * FROM PRODUCT`;
+    res.json(result.recordset);
   } catch (err) {
-    console.error('Error querying material by ID:', err);
+    console.error('Error fetching products:', err);
     res.status(500).send('Server Error');
   }
 });
+
+// Get the product's material and qty for the form
+app.get('/api/products/:id/materials', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await sql.query`
+      SELECT m.MATERIAL_ID, m.MATERIAL_NAME, b.BOM_QTY
+      FROM Materials m
+      JOIN BOM b ON m.MATERIAL_ID = b.MATERIAL_ID
+      WHERE b.PRODUCT_ID = ${id}
+    `;
+    res.json(result.recordset);
+  } catch (err) {
+    console.error('Error querying materials for product:', err);
+    res.status(500).send('Server Error');
+  }
+});
+
+//================================================================================================
+//                                          EXPENCES
+//================================================================================================
+
 
 app.get('/api/expences', async (req, res) => {
   try {
@@ -271,6 +258,33 @@ app.delete('/api/expences/:id', async (req, res) => {
     res.status(500).json({ error: 'Failed to delete expense' });
   }
 });
+
+//================================================================================================
+//                                            BOM
+//================================================================================================
+
+
+// Endpoint to add a product
+app.post('/api/products', async (req, res) => {
+  const { id, name, description } = req.body;
+
+  if (!id || !name || !description) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
+  try {
+    await sql.query`
+      INSERT INTO Products (PRODUCT_ID, PRODUCT_NAME, PRODUCT_DESCRIPTION)
+      VALUES (${id}, ${name}, ${description})
+    `;
+    res.status(201).json({ message: 'Products added successfully' });
+  } catch (err) {
+    console.error('Error adding product:', err.message);
+    res.status(500).json({ error: 'Failed to add product' });
+  }
+});
+
+// =================================================================================================
 
 
 
