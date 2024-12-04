@@ -1,10 +1,10 @@
 // src/pages/BOM.js
 import React, { useState, useEffect } from 'react';
-import Description from '../Description';
-import Table from '../Table';
-import Search from '../Search';
-import Button from '../Button';
-import './PageStyle.css';
+import Description from '../../components/Description';
+import Table from '../../components/Table';
+import Search from '../../components/Search';
+import Button from '../../components/Button';
+import '../PageStyle.css';
 
 function Bom() {
   const [products, setProducts] = useState([]);

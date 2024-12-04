@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import Description from '../Description';
-import Table from '../Table';
-import Search from '../Search';
-import Button from '../Button';
+import Description from '../../components/Description';
+import Table from '../../components/Table';
+import Search from '../../components/Search';
+import Button from '../../components/Button';
 import ExpenceForm from './ExpenceForm';
-import ViewForm from "./ViewForm";
-import './PageStyle.css';
+import '../PageStyle.css';
 import ExpenceViewForm from './ExpenceViewForm';
 
 function Expenses() {
@@ -53,7 +52,7 @@ function Expenses() {
   };
 
 
-  const handleSubmit = (material) => {
+  const handleSubmit = () => {
     fetchExpences(); // Refresh data after adding or updating a material
     handleClose(); // Close the form
   };
@@ -114,6 +113,6 @@ function Expenses() {
       {isViewVisible && <ExpenceViewForm onClose={handleClose} viewObject={data[selectedRow]} />}
     </div>
   );
-};
+}
 
 export default Expenses;

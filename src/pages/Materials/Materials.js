@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import Button from "../Button";
-import Table from "../Table";
-import Search from "../Search";
-import Description from "../Description";
-import "./PageStyle.css";
+import Button from "../../components/Button";
+import Table from "../../components/Table";
+import Search from "../../components/Search";
+import Description from "../../components/Description";
+import "../PageStyle.css";
 import MaterialForm from "./MaterialForm";
 import ViewForm from "./ViewForm";
 
@@ -54,7 +54,7 @@ const Materials = () => {
     setEditData(null);
   };
 
-  const handleSubmit = (material) => {
+  const handleSubmit = () => {
     fetchData(); // Refresh data after adding or updating a material
     handleClose(); // Close the form
   };

@@ -87,7 +87,7 @@ app.post('/api/products', async (req, res) => {
       INSERT INTO Products (PRODUCT_ID, PRODUCT_NAME, PRODUCT_DESCRIPTION)
       VALUES (${id}, ${name}, ${description})
     `;
-    res.status(201).json({ message: 'Product added successfully' });
+    res.status(201).json({ message: 'Products added successfully' });
   } catch (err) {
     console.error('Error adding product:', err.message);
     res.status(500).json({ error: 'Failed to add product' });

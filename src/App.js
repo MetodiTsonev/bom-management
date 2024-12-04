@@ -2,12 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import NavBar from './components/NavBar';
-import Home from './components/pages/Home';
-import Products from './components/pages/Products';
-import Expenses from './components/pages/Expences';
-import BOM from './components/pages/Bom';
-import Login from './components/pages/Login';
-import Materials from './components/pages/Materials';
+import Home from './pages/Home/Home';
+import Products from './pages/Products/Products';
+import Expenses from './pages/Expences/Expences';
+import BOM from './pages/Bom/Bom';
+import Login from './pages/Home/Login';
+import Materials from './pages/Materials/Materials';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

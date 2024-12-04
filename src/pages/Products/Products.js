@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 
-import Description from '../Description';
-import Table from '../Table';
-import Search from '../Search';
-import Button from '../Button';
+import Description from '../../components/Description';
+import Table from '../../components/Table';
+import Search from '../../components/Search';
+import Button from '../../components/Button';
 
-import './PageStyle.css';
+import '../PageStyle.css';
 import ProductForm from "./ProductForm";
 
 function Products() {
