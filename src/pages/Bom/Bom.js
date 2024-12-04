@@ -1,226 +1,106 @@
-// src/pages/BOM.js
-import React, { useState, useEffect } from 'react';
-import Description from '../../components/Description';
-import Table from '../../components/Table';
-import Search from '../../components/Search';
-import Button from '../../components/Button';
-import '../PageStyle.css';
+import React, { useEffect, useState } from "react";
+import Button from "../../components/Button";
+import Table from "../../components/Table";
+import Search from "../../components/Search";
+import Description from "../../components/Description";
+import "../PageStyle.css";
 
-function Bom() {
-  const [products, setProducts] = useState([]);
-  const [materials, setMaterials] = useState([]);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [bomItems, setBomItems] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+const Bom = () => {
+  const [isAddVisible, setIsAddVisible] = useState(false);
+  const [isEditVisible, setIsEditVisible] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [editData, setEditData] = useState(null);
+  const [isViewVisible, setIsViewVisible] = useState(false);
 
-  // Fetch products and materials
-  useEffect(() => {
-    // Fetch products
-    fetch('http://localhost:5001/api/products')
-      .then(res => res.json())
-      .then(data => setProducts(data))
-      .catch(error => console.error('Error fetching products:', error));
+  const headers = {PRODUCT_ID: `PRODUCT ID`, MATERIAL_ID: `MATERIAL ID`, BOM_QTY: `QUANTITY`};
 
-    // Use the new endpoint for materials
-    fetch('http://localhost:5001/api/bom/materials')
-      .then(res => res.json())
-      .then(data => setMaterials(data))
-      .catch(error => console.error('Error fetching materials:', error));
-  }, []);
+  const fetchData = () => {
+    fetch('http://localhost:5001/api/bom')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Fetched data:', data); // Log to verify data
+      setData(data);
+      setFilteredData(data);
+  })
+  .catch(error => console.error("Error fetching BOM:", error));
+};
 
-  // Fetch BOM items when product is selected
-  useEffect(() => {
-    if (selectedProduct) {
-      fetch(`http://localhost:5001/api/bom/${selectedProduct.PRODUCT_ID}`)
-        .then(res => res.json())
-        .then(data => setBomItems(data))
-        .catch(error => console.error('Error fetching BOM:', error));
-    }
-  }, [selectedProduct]);
+useEffect(() => {
+  fetchData(); // Fetch data on component mount
+}, []);
 
-  const productHeaders = {
-    'ID': 'PRODUCT_ID',
-    'Name': 'PRODUCT_NAME',
-    'Description': 'PRODUCT_DESCRIPTION'
-  };
+const handleAdd = () => {
+  setIsAddVisible(true);
+  setEditData(null); // Ensure no edit data is set when adding new material
+};
 
-  const bomHeaders = {
-    'Material ID': 'MATERIAL_ID',
-    'Material Name': 'MATERIAL_NAME',
-    'Quantity': 'BOM_QTY',
-    'Price': 'PRICE_PRICE',
-    'Total': 'TOTAL_COST'
-  };
+const handleClose = () => {
+  setIsAddVisible(false);
+  setIsEditVisible(false);
+  setIsViewVisible(false);
+  setEditData(null);
+};
 
-  // Filter products based on search term
-  const filteredProducts = products.filter(product =>
-    product.PRODUCT_NAME.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.PRODUCT_ID.toString().includes(searchTerm)
-  );
+const handleSubmit = () => {
+  fetchData(); // Refresh data after adding or updating a material
+  handleClose(); // Close the form
+};
 
-  const handleProductSelect = (index) => {
-    setSelectedProduct(filteredProducts[index]);
-  };
+const handleDelete = () => {
+  // TODO: DELETE FUNCTIONALITY
+};
 
-  const handleAdd = () => {
-    if (!selectedProduct) {
-      alert('Please select a product first');
-      return;
-    }
-    setShowModal(true);
-  };
+const handleView = () => {
+  // TODO: VIEW FUNCTIONALITY
+};
 
-  const handleDelete = (index) => {
-    if (!selectedProduct || !bomItems[index]) return;
+const handleClear = () => {
+  setFilteredData(data);
+  setSearchValue(''); //TODO doesn't work
+};
 
-    const materialId = bomItems[index].MATERIAL_ID;
-
-    if (window.confirm('Are you sure you want to delete this material from BOM?')) {
-      fetch(`http://localhost:5001/api/bom/${selectedProduct.PRODUCT_ID}/${materialId}`, {
-        method: 'DELETE'
-      })
-        .then(response => {
-          if (response.ok) {
-            setBomItems(bomItems.filter((_, i) => i !== index));
-          } else {
-            throw new Error('Failed to delete');
-          }
-        })
-        .catch(error => console.error('Error deleting BOM item:', error));
-    }
-  };
-
-  const calculateTotalCost = () => {
-    return bomItems.reduce((total, item) => {
-      const itemTotal = item.BOM_QTY * (item.PRICE_PRICE || 0);
-      return total + itemTotal;
-    }, 0).toFixed(2);
-  };
-
-  return (
-    <div>
-      <Description
-        text="Bill of Materials"
-        description="Manage product specifications and material requirements"
-      />
-      <div className="container">
-        <div className="left-column">
-          <Search
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search products..."
-          />
-          <Table
-            data={filteredProducts}
-            headers={productHeaders}
-            onRowSelect={handleProductSelect}
-          />
-        </div>
-        <div className="right-column">
-          {selectedProduct && (
-            <>
-              <h3>BOM for {selectedProduct.PRODUCT_NAME}</h3>
-              <Table
-                data={bomItems.map(item => ({
-                  ...item,
-                  TOTAL_COST: (item.BOM_QTY * (item.PRICE_PRICE || 0)).toFixed(2)
-                }))}
-                headers={bomHeaders}
-                onRowSelect={(index) => console.log('Selected BOM item:', bomItems[index])}
-              />
-              <div className="total-cost">
-                <strong>Total Cost: ${calculateTotalCost()}</strong>
-              </div>
-              <div className="button-group">
-                <Button onClick={handleAdd} label="Add Material" />
-                <Button onClick={() => handleDelete(selectedProduct)} label="Delete Material" />
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-
-      {showModal && (
-        <BomModal
-          materials={materials}
-          onSave={(bomItem) => {
-            fetch(`http://localhost:5001/api/bom/${selectedProduct.PRODUCT_ID}`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(bomItem)
-            })
-              .then(res => res.json())
-              .then(newBomItem => {
-                setBomItems([...bomItems, newBomItem]);
-                setShowModal(false);
-              })
-              .catch(error => {
-                console.error('Error adding BOM item:', error);
-                alert('Failed to add material to BOM');
-              });
-          }}
-          onClose={() => setShowModal(false)}
-        />
-      )}
-    </div>
-  );
-}
-
-function BomModal({ materials, onSave, onClose }) {
-  const [formData, setFormData] = useState({
-    MATERIAL_ID: '',
-    BOM_QTY: 1
+const handleSearch = () => {
+  const search = searchValue.toLowerCase();
+  const filtered = data.filter(row => {
+    return Object.values(row).some(value => {
+      return String(value).toLowerCase().includes(search);
+    });
   });
+  setFilteredData(filtered);
+};
 
-  return (
-    <div className="modal">
-      <div className="modal-content">
-        <h2>Add Material to BOM</h2>
-        <form onSubmit={(e) => {
-          e.preventDefault();
-          onSave(formData);
-        }}>
-          <div className="form-group">
-            <label>Material:</label>
-            <select
-              value={formData.MATERIAL_ID}
-              onChange={(e) => setFormData({
-                ...formData,
-                MATERIAL_ID: e.target.value
-              })}
-              required
-            >
-              <option value="">Select a material</option>
-              {materials.map(material => (
-                <option key={material.MATERIAL_ID} value={material.MATERIAL_ID}>
-                  {material.MATERIAL_NAME}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="form-group">
-            <label>Quantity:</label>
-            <input
-              type="number"
-              step="0.001"
-              min="0.001"
-              value={formData.BOM_QTY}
-              onChange={(e) => setFormData({
-                ...formData,
-                BOM_QTY: parseFloat(e.target.value)
-              })}
-              required
-            />
-          </div>
-          <div className="button-group">
-            <button type="submit">Save</button>
-            <button type="button" onClick={onClose}>Cancel</button>
-          </div>
-        </form>
+const handleRowClick = (index) => {
+  // TODO: SELECT ROW FUNCTIONALITY
+};
+
+return (
+  <div>
+    <Description text='Bill of Materials' description='The Bom Page is used to create Products and its specifications.'/>
+    <div className="container">
+      <div className="left-column">
+        <Table data={filteredData} onRowSelect={setSelectedRow} headers={headers}/>
+        <Button label="Clear filters" onClick={handleClear} type="clear"/>
+      </div>
+      <div className="right-column">
+        <div className="searchField">
+          <Search onSearch={setSearchValue} />
+          <Button label="Go" onClick={handleSearch} type="search" />
+        </div>
+        <Button label="Add" onClick={handleAdd} type="add" />
+        <Button label="Delete" onClick={handleDelete} type="delete" />
+        <Button label="View" onClick={handleView} type="view" />
       </div>
     </div>
-  );
-}
+  </div>
+);
+};
 
 export default Bom;

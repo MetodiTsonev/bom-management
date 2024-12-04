@@ -5,7 +5,7 @@ import NavBar from './components/NavBar';
 import Home from './pages/Home/Home';
 import Products from './pages/Products/Products';
 import Expenses from './pages/Expences/Expences';
-import BOM from './pages/Bom/Bom';
+import Bom from './pages/Bom/Bom';
 import Login from './pages/Home/Login';
 import Materials from './pages/Materials/Materials';
 
@@ -48,7 +48,7 @@ function App() {
         <Route path="/materials" element={isAuthenticated ? <Materials /> : <Navigate to="/login" />} />
         <Route path="/products" element={isAuthenticated ? <Products /> : <Navigate to="/login" />} />
         <Route path="/expenses" element={isAuthenticated ? <Expenses /> : <Navigate to="/login" />} />
-        <Route path="/bom" element={isAuthenticated ? <BOM /> : <Navigate to="/login" />} />
+        <Route path="/bom" element={isAuthenticated ? <Bom /> : <Navigate to="/login" />} />
 
         {/* Redirect any other route to home if not authenticated */}
         <Route path="*" element={<Navigate to="/" />} />

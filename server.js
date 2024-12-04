@@ -34,10 +34,10 @@ sql.connect(sqlConfig, (err) => {
 //                                          MATERIALS
 //================================================================================================
 
-// Endpoint to get the price and price date for a specific material
+// Endpoint to get the Materials table
 app.get('/api/data', async (req, res) => {
   try {
-    
+
     const result = await sql.query`SELECT * FROM Materials`;
     res.json(result.recordset);
   } catch (err) {
@@ -60,7 +60,7 @@ app.get('/api/data/:id', async (req, res) => {
     if (result.recordset.length === 0) {
       return res.status(404).json({ error: "Material not found" });
     }
-    
+
     res.json(result.recordset[0]);
   } catch (err) {
     console.error('Error querying material by ID:', err);
@@ -262,6 +262,94 @@ app.delete('/api/expences/:id', async (req, res) => {
 //================================================================================================
 //                                            BOM
 //================================================================================================
+
+
+// Endpoint to get all BOM records
+app.get('/api/bom', async (req, res) => {
+  try {
+    const result = await sql.query`SELECT * FROM BOM`;
+    res.json(result.recordset);
+  } catch (err) {
+    console.error('Error fetching BOM:', err);
+    res.status(500).send('Server Error');
+  }
+});
+
+// Endpoint to get a specific BOM record by product ID and material ID
+app.get('/api/bom/:productId/:materialId', async (req, res) => {
+  const { productId, materialId } = req.params;
+
+  try {
+    const result = await sql.query`
+      SELECT * FROM BOM
+      WHERE PRODUCT_ID = ${productId} AND MATERIAL_ID = ${materialId}
+    `;
+
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ error: 'BOM record not found' });
+    }
+
+    res.json(result.recordset[0]);
+  } catch (err) {
+    console.error('Error fetching BOM record:', err);
+    res.status(500).send('Server Error');
+  }
+});
+
+// Endpoint to add a new BOM record
+app.post('/api/bom', async (req, res) => {
+  const { productId, materialId, qty } = req.body;
+
+  try {
+    await sql.query`
+      INSERT INTO BOM (PRODUCT_ID, MATERIAL_ID, BOM_QTY)
+      VALUES (${productId}, ${materialId}, ${qty})
+    `;
+    res.status(201).json({ message: 'BOM record added successfully' });
+  } catch (err) {
+    console.error('Error adding BOM record:', err);
+    res.status(500).json({ error: 'Failed to add BOM record' });
+  }
+});
+
+// Endpoint to delete a BOM record by product ID and material ID
+app.delete('/api/bom/:productId/:materialId', async (req, res) => {
+  const { productId, materialId } = req.params;
+
+  try {
+    await sql.query`
+      DELETE FROM BOM
+      WHERE PRODUCT_ID = ${productId} AND MATERIAL_ID = ${materialId}
+    `;
+    res.json({ message: 'BOM record deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting BOM record:', err);
+    res.status(500).json({ error: 'Failed to delete BOM record' });
+  }
+});
+
+// Endpoint to view a BOM record by product ID and material ID
+app.get('/api/bom/:productId/:materialId', async (req, res) => {
+  const { productId, materialId } = req.params;
+
+  try {
+    const result = await sql.query`
+      SELECT * FROM BOM
+      WHERE PRODUCT_ID = ${productId} AND MATERIAL_ID = ${materialId}
+    `;
+
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ error: 'BOM record not found' });
+    }
+
+    res.json(result.recordset[0]);
+  } catch (err) {
+    console.error('Error fetching BOM record:', err);
+    res.status(500).send('Server Error');
+  }
+});
+
+
 
 
 // Endpoint to add a product
