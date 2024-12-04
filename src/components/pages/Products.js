@@ -13,7 +13,6 @@ function Products() {
   const [data, setData] = useState([]);
   const [searchValue, setSearchValue] = useState('');
   const [selectedRow, setSelectedRow] = useState(null);
-  const [isAddVisible, setIsAddVisible] = useState(false);
   const headers = {ID: `PRODUCT_ID`, Name: `PRODUCT_NAME`, Description: `PRODUCT_DESCRIPTION`};
 
   const fetchData = () => {
@@ -48,39 +47,22 @@ function Products() {
     setFilteredData(data);
   }
 
-  const handleAdd = () => {
-    setIsAddVisible(true);
-  }
-
-  const handleClose = () => {
-    setIsAddVisible(false);
-    console.log("Close clicked");
-  }
-
-  const handleSubmit = (product) => {
-    fetchData();
-    handleClose();
-  }
-
   return (
     <div>
       <Description text="Products" description="The products page is used for configuring product details" />
       <div className="container">
         <div className="left-column">
-          <Table data={filteredData} onRowSelect={setSelectedRow} headers={headers}/>
-          <Button label="Clear filters" onClick={handleClear} type="clear"/>
-        </div>
-        <div className="right-column">
           <div className="searchField">
             <Search onSearch={setSearchValue}/>
             <Button label="Go" onClick={handleSearch} type="search"/>
           </div>
-          <Button label="Add" onClick={handleAdd} type="add" />
-          <Button label="Edit BOM Specs" onClick={() => alert('Edit clicked')} type="editBom" />
-          <Button label="View Production Cost" onClick={() => alert('View clicked')} type="delete" />
+          <Table data={filteredData} onRowSelect={setSelectedRow} headers={headers}/>
+          <Button label="Clear filters" onClick={handleClear} type="clear"/>
+        </div>
+        <div className="right-column">
+          {selectedRow !== null && <ProductForm formObject={data[selectedRow]}/>}
         </div>
       </div>
-      {isAddVisible && <ProductForm onCLose={handleClose} onSubmit={handleSubmit} editObject={null}/>}
     </div>
   );
 }

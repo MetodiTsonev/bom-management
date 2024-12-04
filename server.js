@@ -45,17 +45,34 @@ app.get('/api/data', async (req, res) => {
   }
 });
 
-// app.get('/api/products', async (req, res) => {
-//     try {
-//         const pool = await sql.connect(config);
-//         const result = await pool.request()
-//             .query('SELECT * FROM PRODUCT');
-//         res.json(result.recordset);
-//     } catch (err) {
-//         console.error('Error fetching products:', err);
-//         res.status(500).send('Server Error');
-//     }
-// });
+// Get all products for the table
+app.get('/api/products', async (req, res) => {
+  try {
+    const result = await sql.query`SELECT * FROM PRODUCT`;
+    res.json(result.recordset);
+  } catch (err) {
+    console.error('Error fetching products:', err);
+    res.status(500).send('Server Error');
+  }
+});
+
+// Get the product's material and qty for the form
+app.get('/api/products/:id/materials', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await sql.query`
+      SELECT m.MATERIAL_ID, m.MATERIAL_NAME, b.BOM_QTY
+      FROM Materials m
+      JOIN BOM b ON m.MATERIAL_ID = b.MATERIAL_ID
+      WHERE b.PRODUCT_ID = ${id}
+    `;
+    res.json(result.recordset);
+  } catch (err) {
+    console.error('Error querying materials for product:', err);
+    res.status(500).send('Server Error');
+  }
+});
 
 // Endpoint to add a product
 app.post('/api/products', async (req, res) => {

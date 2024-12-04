@@ -1,114 +1,64 @@
 import React, { useState, useEffect } from "react";
 import "./ProductForm.css"
 
-const ProductForm = ({onClose, onSubmit, editObject}) => {
-    const [formData, setFormData] = useState({
-        id: '',
-        name: '',
-        description: ''
-    })
 
-    const handleChange = (e) => {
-        const {name, value} = e.target;
-        setFormData({
-            ...formData,
-            [name]: value
-        });
-    };
+const ProductForm = ({formObject}) => {
+    const [formData, setFormData] = useState({
+        id: formObject.PRODUCT_ID,
+        name: formObject.PRODUCT_NAME,
+        description: formObject.PRODUCT_DESCRIPTION,
+        materialId: null,
+        materialName: null,
+        bomQty: null
+    });
 
     useEffect(() => {
-        if (editObject) {
-            console.log("Edit object data in form:", editObject); // Debugging log
-            setFormData({
-                id: editObject.PRODUCT_ID || '',
-                name: editObject.PRODUCT_NAME || '',
-                description: editObject.PRODUCT_DESCRIPTION || ''
-            });
-        }
-    }, [editObject]);
+        fetch(`http://localhost:5001/api/products/${formData.id}/materials`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.length > 0) {
+                    const material = data[0]; // Assuming only one material is returned
+                    setFormData((prevFormData) => ({
+                        ...prevFormData,
+                        materialId: material.MATERIAL_ID,
+                        materialName: material.MATERIAL_NAME,
+                        bomQty: material.BOM_QTY,
+                    }));
+                } else {
+                    console.warn("No material found for the product.");
+                }
+            })
+            .catch(error => console.error("Error fetching materials for product:", error));
+    }, [formData.id]);
 
     useEffect(() => {
         console.log("Form data:", formData); // Debugging log
-    }, [editObject]);
+    }, [formObject]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const url = editObject
-                ? `http://localhost:5001/api/data/${formData.id}` // Edit endpoint
-                : 'http://localhost:5001/api/products'; // Add endpoint
-            const method = editObject ? 'PUT' : 'POST';
-
-            const response = await fetch(url, {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                onSubmit(result); // Trigger parent component to refresh data
-                onClose(); // Close the form
-            } else {
-                alert(editObject ? 'Failed to update product.' : 'Failed to add product.');
-            }
-        } catch (error) {
-            console.error(editObject ? 'Error updating product:' : 'Error adding product:', error);
-            alert('An error occurred. Please try again.');
-        }
-    }
 
     return (
-        <div className="popup-form">
-            <h1>{editObject ? 'Edit Product' : 'Add Product'}</h1>
-            <form onSubmit={handleSubmit}>
-                <div className="container">
-                    <div className={`left-column`}>
-                        <h1>Product info</h1>
-                        <label>
-                            ID:
-                            <input
-                                type="text"
-                                name="id"
-                                value={formData.id}
-                                onChange={handleChange}
-                                required
-                                disabled={!!editObject} // Disable ID field when editing
-                            />
-                        </label>
-                        <label>
-                            Name:
-                            <input
-                                type="text"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                required
-                            />
-                        </label>
-                        <label>
-                            Description:
-                            <input
-                                type="text"
-                                name="description"
-                                value={formData.description}
-                                onChange={handleChange}
-                                required
-                            />
-                        </label>
+        <div className="form">
+            <h1>{formData.name}</h1>
+            {formData.materialId ? (
+            <div>
+                    <div className="field">
+                        <span className="text">Material ID: {formData.materialId} </span>
                     </div>
-                    <div className={"right-column"}>
-                        <h1>Materials list</h1>
-                        {/*TODO add table of materials*/}
+                    <div className="field">
+                        <span className="text">Material Name: {formData.materialName}</span>
+                    </div>
+                    <div className="field">
+                        <span className="text">Quantity: {formData.bomQty}</span>
                     </div>
                 </div>
-                <div className="buttons">
-                    <button type="submit" onClick={onSubmit}>Save</button>
-                    <button type="button" onClick={onClose}>Cancel</button> {/*TODO does not close*/}
-                </div>
-            </form>
+            ) : (
+                <h1 className="error">Product not found in BOM!</h1>
+            )}
         </div>
     );
 }
