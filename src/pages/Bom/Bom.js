@@ -3,6 +3,7 @@ import Button from "../../components/Button";
 import Table from "../../components/Table";
 import Search from "../../components/Search";
 import Description from "../../components/Description";
+import AddProductForm from "./AddProductForm";
 import "../PageStyle.css";
 
 const Bom = () => {
@@ -99,6 +100,7 @@ return (
         <Button label="View" onClick={handleView} type="view" />
       </div>
     </div>
+    {isAddVisible && <AddProductForm onClose={handleClose} onSubmit={handleSubmit} />}
   </div>
 );
 };
