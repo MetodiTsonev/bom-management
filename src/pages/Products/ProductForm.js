@@ -45,7 +45,7 @@ const ProductForm = ({formObject}) => {
         <div className="form">
             <h1>{formData.name}</h1>
             {formData.materialId ? (
-            <div>
+            <div className="info-box">
                     <div className="field">
                         <span className="text">Material ID: {formData.materialId} </span>
                     </div>

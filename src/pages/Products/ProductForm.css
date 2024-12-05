@@ -1,20 +1,15 @@
 .form {
-    width: 100%;
+    width: 80%;
 }
 
 h1 {
-    font-size: 3.5rem;
+    font-size: 4rem;
     font-style: italic;
     margin-bottom: 1rem;
     color: #333;
     text-align: center;
 }
 
-h2 {
-    font-size: 2rem;
-    margin-bottom:  20px;
-    color: #444;
-}
 .error {
     color: red;
     font-size: 1.5rem;
@@ -22,7 +17,7 @@ h2 {
     margin-top: 1rem;
 }
 
-.form div {
+.form .info-box {
     padding: 20px;
     background-color: #f9f9f9;
     border-radius: 10px;
@@ -33,16 +28,15 @@ h2 {
 }
 
 .field {
-    font-size: 1.5rem;
     margin: 20px 0;
     font-weight: bold;
     color: #333;
-    
+    padding: 20px;
 }
 
 .text {
     display: block;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     margin-bottom: 10px;
     color: #555;
 }

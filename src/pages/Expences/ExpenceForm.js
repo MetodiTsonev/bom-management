@@ -72,7 +72,7 @@ const ExpenceForm = ({onClose, onSubmit }) => {
                 </div>
                 <div className="buttons">
                     <button type="submit">Save</button>
-                    <button type="button" onClick={onClose}>Cancel</button> {/*TODO does not close*/}
+                    <button type="button" onClick={onClose}>Cancel</button>
                 </div>
             </form>
         </div>

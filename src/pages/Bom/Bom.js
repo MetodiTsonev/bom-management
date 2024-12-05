@@ -37,7 +37,6 @@ useEffect(() => {
 }, []);
 
 const handleAdd = () => {
-  // TODO: ADD FUNCTIONALITY
   setIsAddVisible(true);
 };
 
@@ -47,7 +46,6 @@ const handleClose = () => {
 };
 
 const handleSubmit = () => {
-  // TODO: SUBMIT FUNCTIONALITY
   fetchData(); // Refresh data after adding or updating a material
   handleClose(); // Close the form
 };
