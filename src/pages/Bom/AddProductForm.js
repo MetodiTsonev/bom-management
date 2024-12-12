@@ -45,14 +45,14 @@ const AddProductForm = ({ onClose, onSubmit }) => {
         if (material && !formData.materials.find((m) => m.id === materialId)) {
             setFormData((prevFormData) => ({
                 ...prevFormData,
-                materials: [...prevFormData.materials, { id: materialId, name: material.MATERIAL_NAME, measure: material.MEASURE, qty: '' }]
+                materials: [...prevFormData.materials, { id: materialId, name: material.MATERIAL_NAME, measure: material.MATERIAL_MEASURE, qty: '' }]
             }));
         }  
     };
 
     const updateMaterialQty = (index, value) => {
         const updatedMaterials = [...formData.materials];
-        updatedMaterials[index].qty = value;
+        updatedMaterials[index].qty = Number(value);
         setFormData((prevFormData) => ({
             ...prevFormData,
             materials: updatedMaterials
@@ -66,18 +66,18 @@ const AddProductForm = ({ onClose, onSubmit }) => {
         if (expense && !formData.expenses.find((ex) => ex.id === expenseId)) {
             setFormData((prevFormData) => ({
                 ...prevFormData,
-                expenses: [...prevFormData.expenses, { id: expenseId, name: expense.EXPENSE_NAME, price: '' }]
+                expenses: [...prevFormData.expenses, { id: expenseId, name: expense.EXPENCE_NAME, price: '' }]
             }));
         }
     };
 
     const updateExpensePrice = (index, value) => {
         const updatedExpenses = [...formData.expenses];
-        updatedExpenses[index].price = value;
+        updatedExpenses[index].price = Number(value);
         setFormData((prevFormData) => ({
             ...prevFormData,
             expenses: updatedExpenses
-        }));
+        }));        
     };
 
     const handleSubmit = (e) => {
@@ -147,42 +147,40 @@ const AddProductForm = ({ onClose, onSubmit }) => {
                     </div>
 
                     <div className="rhs">
-                        {/* TODO adds only the input field, without the context label */}
                         <h2>Materials</h2>
                         <div className="materials-group">
-                            {formData.materials.map((index, material) => (
+                            {formData.materials.map((material, index) => (
                                 <div key={material.id} className="material-row">
                                     <label>
                                         {material.name}
                                         <input
-                                        type="number"
-                                        placeholder="Enter quantity"
-                                        value={material.qty}
-                                        onChange={(e) => updateMaterialQty(index, e.target.value)}
-                                        required
-                                        />
-                                        {material.measure}
-                                    </label>
-                                </div>
-                            ))}
-                        </div>
-
-                        <h2>Expenses</h2>
-                        <div className="expenses-group">
-                            {formData.expenses.map((index, expense) => (
-                                <div key={expense.id} className="expense-row">
-                                    <label>
-                                        {expense.name} 
-                                        <input
                                             type="number"
-                                            placeholder="Enter price"
-                                            value={expense.price}
-                                            onChange={(e) => updateExpensePrice(index, e.target.value)}
+                                            placeholder={material.measure}
+                                            value={material.qty}
+                                            onChange={(e) => updateMaterialQty(index, e.target.value)}
                                             required
                                         />
                                     </label>
                                 </div>
                             ))}
+                        </div>
+                        
+                        <h2>Expenses</h2>
+                        <div className="expenses-group">
+                        {formData.expenses.map((expense, index) => (
+                            <div key={expense.id} className="expense-row">
+                                <label>
+                                    {expense.name} 
+                                    <input
+                                        type="number"
+                                        placeholder="Enter price"
+                                        value={expense.price}
+                                        onChange={(e) => updateExpensePrice(index, e.target.value)}
+                                        required
+                                    />
+                                </label>
+                            </div>
+                        ))}
                         </div>
                     </div>
                 </div>
