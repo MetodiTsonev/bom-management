@@ -12,9 +12,9 @@ app.use(express.json());
 // Azure SQL Database configuration
 const sqlConfig = {
   user: 'node', // SQL Server username
-  password: 'Meto6kata!', // SQL Server password
-  database: 'my-db',
-  server: 'metivladi.database.windows.net', // You can use 'localhost\\instance' to connect to named instance
+  password: 'Meto6kata', // SQL Server password
+  database: 'bom',
+  server: 'bomdb.database.windows.net', // You can use 'localhost\\instance' to connect to named instance
   options: {
     encrypt: true, // Use encryption for Azure SQL Database
     trustServerCertificate: true,
