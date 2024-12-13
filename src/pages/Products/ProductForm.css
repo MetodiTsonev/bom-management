@@ -17,16 +17,6 @@ h1 {
     margin-top: 1rem;
 }
 
-.form .info-box {
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    width: 80%;
-    margin: 0 auto;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
 .field {
     margin: 20px 0;
     font-weight: bold;
@@ -39,4 +29,25 @@ h1 {
     font-size: 1.8rem;
     margin-bottom: 10px;
     color: #555;
+}
+
+.horizontal-scroll-field {
+    display: flex;
+    gap: 2%;
+    overflow-x: scroll;
+    padding: 2%;
+    background-color: #f9f9f9;
+    border-radius: 12px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.info-box {
+    flex: 0 0 auto; 
+    width: 200px; 
+    padding: 16px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }

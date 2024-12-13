@@ -7,9 +7,10 @@ const ProductForm = ({formObject}) => {
         id: formObject.PRODUCT_ID,
         name: formObject.PRODUCT_NAME,
         description: formObject.PRODUCT_DESCRIPTION,
-        materialId: null,
-        materialName: null,
-        bomQty: null
+        materials: []
+        // materialId: null,
+        // materialName: null,
+        // bomQty: null
     });
 
     useEffect(() => {
@@ -22,12 +23,14 @@ const ProductForm = ({formObject}) => {
             })
             .then(data => {
                 if (data.length > 0) {
-                    const material = data[0]; // Assuming only one material is returned
                     setFormData((prevFormData) => ({
                         ...prevFormData,
+                        materials: data
+                    .map(material => ({
                         materialId: material.MATERIAL_ID,
                         materialName: material.MATERIAL_NAME,
-                        bomQty: material.BOM_QTY,
+                        bomQty: material.BOM_QTY
+                    }))
                     }));
                 } else {
                     console.warn("No material found for the product.");
@@ -44,21 +47,26 @@ const ProductForm = ({formObject}) => {
     return (
         <div className="form">
             <h1>{formData.name}</h1>
-            {formData.materialId ? (
-            <div className="info-box">
-                    <div className="field">
-                        <span className="text">Material ID: {formData.materialId} </span>
+            <div className="horizontal-scroll-field">
+                {formData.materials.length > 0 ? (
+                formData.materials.map((material, index) => (
+                    <div className="info-box" key={index}>
+                        <div className="field">
+                            <span className="text">Material ID: {material.materialId} </span>
+                        </div>
+                        <div className="field">
+                            <span className="text">Material Name: {material.materialName}</span>
+                        </div>
+                        <div className="field">
+                            <span className="text">Quantity: {material.bomQty}</span>
+                        </div>
                     </div>
-                    <div className="field">
-                        <span className="text">Material Name: {formData.materialName}</span>
-                    </div>
-                    <div className="field">
-                        <span className="text">Quantity: {formData.bomQty}</span>
-                    </div>
-                </div>
+                ))
             ) : (
                 <h1 className="error">Product not found in BOM!</h1>
             )}
+            </div>
+            <h2>Total cost: 200{/*TODO insert the total cost here */} BGN</h2>
         </div>
     );
 }
