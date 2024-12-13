@@ -16,6 +16,7 @@ const Materials = () => {
   const [selectedRow, setSelectedRow] = useState(null);
   const [editData, setEditData] = useState(null);
   const [isViewVisible, setIsViewVisible] = useState(false);
+  const [viewData, setViewData] = useState(null);
 
   const headers = {ID: `MATERIAL_ID`, Name: `MATERIAL_NAME`, Description: `MATERIAL_DESCRIPTION`, Measure: 'MATERIAL_MEASURE'};
 
@@ -101,12 +102,26 @@ const Materials = () => {
 
   const handleView = () => {
     if (selectedRow !== null) {
-      setIsViewVisible(true);
-    }
-    else {
+      const materialId = data[selectedRow].MATERIAL_ID;
+
+      fetch(`http://localhost:5001/api/materials/${materialId}/products`)
+        .then(async (response) => {
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Failed to fetch products for material: ${errorText}`);
+          }
+          return response.json();
+        })
+        .then((products) => {
+          console.log("Fetched products for material:", products); // Debugging log
+          setIsViewVisible(true);
+          setViewData({ ...data[selectedRow], products }); // Pass material and its products
+        })
+        .catch((error) => console.error("Error fetching products for material:", error));
+    } else {
       alert("Please select a row to view");
     }
-  }
+  };
 
   const handleClear = () => {
     setFilteredData(data);
@@ -142,7 +157,7 @@ const Materials = () => {
       </div>
       {isAddVisible && <MaterialForm onClose={handleClose} onSubmit={handleSubmit} editObject={null} />}
       {isEditVisible && <MaterialForm onClose={handleClose} onSubmit={handleSubmit} editObject={editData} />}
-      {isViewVisible && <ViewForm onClose={handleClose} viewObject={data[selectedRow]} />}
+      {isViewVisible && <ViewForm onClose={handleClose} viewObject={viewData} />}
     </div>
   );
 };

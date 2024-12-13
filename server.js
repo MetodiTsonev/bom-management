@@ -12,9 +12,9 @@ app.use(express.json());
 // Azure SQL Database configuration
 const sqlConfig = {
   user: 'node', // SQL Server username
-  password: 'Meto6kata!', // SQL Server password
-  database: 'my-db',
-  server: 'metivladi.database.windows.net', // You can use 'localhost\\instance' to connect to named instance
+  password: 'Meto6kata', // SQL Server password
+  database: 'bom',
+  server: 'bomdb.database.windows.net', // You can use 'localhost\\instance' to connect to named instance
   options: {
     encrypt: true, // Use encryption for Azure SQL Database
     trustServerCertificate: true,
@@ -65,6 +65,24 @@ app.get('/api/data/:id', async (req, res) => {
   } catch (err) {
     console.error('Error querying material by ID:', err);
     res.status(500).send('Server Error');
+  }
+});
+
+// Endpoint to get all products that use a specific material
+app.get('/api/materials/:materialId/products', async (req, res) => {
+  const { materialId } = req.params;
+
+  try {
+    const result = await sql.query`
+      SELECT p.PRODUCT_ID, p.PRODUCT_NAME
+      FROM PRODUCT p
+      JOIN BOM b ON p.PRODUCT_ID = b.PRODUCT_ID
+      WHERE b.MATERIAL_ID = ${materialId}
+    `;
+    res.json(result.recordset);
+  } catch (error) {
+    console.error('Error fetching products for material:', error.message);
+    res.status(500).json({ error: 'Failed to fetch products for material' });
   }
 });
 
@@ -328,47 +346,68 @@ app.delete('/api/bom/:productId/:materialId', async (req, res) => {
   }
 });
 
-// Endpoint to view a BOM record by product ID and material ID
-app.get('/api/bom/:productId/:materialId', async (req, res) => {
-  const { productId, materialId } = req.params;
 
+
+app.post('/api/products/add', async (req, res) => {
+  const { id, name, description, materials, expences } = req.body;
+
+  console.log('Received data:', { id, name, description, materials, expences });
+
+  const transaction = new sql.Transaction();
   try {
-    const result = await sql.query`
-      SELECT * FROM BOM
-      WHERE PRODUCT_ID = ${productId} AND MATERIAL_ID = ${materialId}
-    `;
+    console.log('Starting transaction...');
+    await transaction.begin();
 
-    if (result.recordset.length === 0) {
-      return res.status(404).json({ error: 'BOM record not found' });
+    // Insert into the PRODUCT table
+    console.log('Inserting product...');
+    const productQuery = `
+      INSERT INTO PRODUCT (PRODUCT_ID, PRODUCT_NAME, PRODUCT_DESCRIPTION)
+      VALUES (@id, @name, @description)
+    `;
+    const productRequest = new sql.Request(transaction);
+    productRequest.input('id', sql.Numeric(18, 0), id);
+    productRequest.input('name', sql.NVarChar(50), name);
+    productRequest.input('description', sql.NVarChar(100), description);
+    await productRequest.query(productQuery);
+    console.log('Product inserted successfully.');
+
+    // Insert into BOM
+    for (const material of materials) {
+      console.log('Inserting material:', material);
+      const bomQuery = `
+        INSERT INTO BOM (PRODUCT_ID, MATERIAL_ID, BOM_QTY)
+        VALUES (@productId, @materialId, @qty)
+      `;
+      const bomRequest = new sql.Request(transaction);
+      bomRequest.input('productId', sql.Numeric(18, 0), id);
+      bomRequest.input('materialId', sql.Numeric(18, 0), material.id);
+      bomRequest.input('qty', sql.Numeric(10, 3), material.qty);
+      await bomRequest.query(bomQuery);
+      console.log('Material inserted successfully:', material);
     }
 
-    res.json(result.recordset[0]);
-  } catch (err) {
-    console.error('Error fetching BOM record:', err);
-    res.status(500).send('Server Error');
-  }
-});
+    // Insert into OTHER_EXPENCES
+    for (const expence of expences) {
+      console.log('Inserting expense:', expense);
+      const expenseQuery = `
+        INSERT INTO OTHER_EXPENCES (PRODUCT_ID, EXPENCE_ID, EXPRENCE_VALUE)
+        VALUES (@productId, @expenseId, @value)
+      `;
+      const expenseRequest = new sql.Request(transaction);
+      expenseRequest.input('productId', sql.Numeric(18, 0), id);
+      expenseRequest.input('expenseId', sql.Numeric(18, 0), expense.id);
+      expenseRequest.input('value', sql.Numeric(10, 2), expense.value);
+      await expenseRequest.query(expenseQuery);
+      console.log('Expense inserted successfully:', expense);
+    }
 
-
-
-
-// Endpoint to add a product
-app.post('/api/products', async (req, res) => {
-  const { id, name, description } = req.body;
-
-  if (!id || !name || !description) {
-    return res.status(400).json({ error: 'All fields are required' });
-  }
-
-  try {
-    await sql.query`
-      INSERT INTO Products (PRODUCT_ID, PRODUCT_NAME, PRODUCT_DESCRIPTION)
-      VALUES (${id}, ${name}, ${description})
-    `;
-    res.status(201).json({ message: 'Products added successfully' });
-  } catch (err) {
-    console.error('Error adding product:', err.message);
-    res.status(500).json({ error: 'Failed to add product' });
+    await transaction.commit();
+    console.log('Transaction committed successfully.');
+    res.status(201).json({ message: 'Product, materials, and expenses added successfully' });
+  } catch (error) {
+    await transaction.rollback();
+    console.error('Transaction failed:', error.message);
+    res.status(500).json({ error: 'Failed to add product, materials, and expenses', details: error.message });
   }
 });
 

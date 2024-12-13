@@ -7,10 +7,10 @@ const AddProductForm = ({ onClose, onSubmit }) => {
         name: '',
         description: '',
         materials: [],
-        expenses: [],
+        expences: [],
     });
     const [materialsGroup, setMaterialsGroup] = useState([]);
-    const [expensesGroup, setExpensesGroup] = useState([]);
+    const [expencesGroup, setExpencesGroup] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -19,9 +19,9 @@ const AddProductForm = ({ onClose, onSubmit }) => {
                 const materialsData = await materialsResponse.json();
                 setMaterialsGroup(materialsData);
 
-                const expensesResponse = await fetch('http://localhost:5001/api/expences');
-                const expensesData = await expensesResponse.json();
-                setExpensesGroup(expensesData);
+                const expencesResponse = await fetch('http://localhost:5001/api/expences');
+                const expencesData = await expencesResponse.json();
+                setExpencesGroup(expencesData);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -45,39 +45,41 @@ const AddProductForm = ({ onClose, onSubmit }) => {
         if (material && !formData.materials.find((m) => m.id === materialId)) {
             setFormData((prevFormData) => ({
                 ...prevFormData,
-                materials: [...prevFormData.materials, { id: materialId, name: material.MATERIAL_NAME, measure: material.MEASURE, qty: '' }]
-            }));
-        }  
-    };
-
-    const updateMaterialQty = (index, value) => {
-        const updatedMaterials = [...formData.materials];
-        updatedMaterials[index].qty = value;
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            materials: updatedMaterials
-        }));
-    };
-
-    const addExpense = (e) => {
-        const expenseId = Number(e.target.value);
-        const expense = expensesGroup.find((ex) => ex.EXPENCE_ID === expenseId);
-
-        if (expense && !formData.expenses.find((ex) => ex.id === expenseId)) {
-            setFormData((prevFormData) => ({
-                ...prevFormData,
-                expenses: [...prevFormData.expenses, { id: expenseId, name: expense.EXPENSE_NAME, price: '' }]
+                materials: [...prevFormData.materials, { id: materialId, name: material.MATERIAL_NAME, measure: material.MATERIAL_MEASURE, qty: '' }]
             }));
         }
     };
 
-    const updateExpensePrice = (index, value) => {
-        const updatedExpenses = [...formData.expenses];
-        updatedExpenses[index].price = value;
+    const updateMaterialQty = (index, value) => {
+        const updatedMaterials = [...formData.materials];
+        updatedMaterials[index].qty = Number(value);
         setFormData((prevFormData) => ({
             ...prevFormData,
-            expenses: updatedExpenses
+            materials: updatedMaterials
         }));
+        console.log(formData.materials);
+    };
+
+    const addExpence = (e) => {
+        const expenceId = Number(e.target.value);
+        const expence = expencesGroup.find((ex) => ex.EXPENCE_ID === expenceId);
+
+        if (expence && !formData.expences.find((ex) => ex.id === expenceId)) {
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                expences: [...prevFormData.expences, { id: expenceId, name: expence.EXPENCE_NAME, price: '' }]
+            }));
+        }
+    };
+
+    const updateExpencePrice = (index, value) => {
+        const updatedExpences = [...formData.expences];
+        updatedExpences[index].price = Number(value);
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            expences: updatedExpences
+        }));
+        console.log(formData.expences);
     };
 
     const handleSubmit = (e) => {
@@ -134,12 +136,12 @@ const AddProductForm = ({ onClose, onSubmit }) => {
                             </select>
                         </label>
                         <label>
-                            Expenses:
-                            <select onChange={addExpense} value="">
-                                <option value="" disabled>Select an expense</option>
-                                {expensesGroup.map((expense) => (
-                                    <option key={expense.EXPENCE_ID} value={expense.EXPENCE_ID}>
-                                        {expense.EXPENCE_NAME}
+                            Expences:
+                            <select onChange={addExpence} value="">
+                                <option value="" disabled>Select an expence</option>
+                                {expencesGroup.map((expence) => (
+                                    <option key={expence.EXPENCE_ID} value={expence.EXPENCE_ID}>
+                                        {expence.EXPENCE_NAME}
                                     </option>
                                 ))}
                             </select>
@@ -150,39 +152,38 @@ const AddProductForm = ({ onClose, onSubmit }) => {
                         {/* TODO adds only the input field, without the context label */}
                         <h2>Materials</h2>
                         <div className="materials-group">
-                            {formData.materials.map((index, material) => (
+                            {formData.materials.map((material, index) => (
                                 <div key={material.id} className="material-row">
                                     <label>
                                         {material.name}
                                         <input
-                                        type="number"
-                                        placeholder="Enter quantity"
-                                        value={material.qty}
-                                        onChange={(e) => updateMaterialQty(index, e.target.value)}
-                                        required
-                                        />
-                                        {material.measure}
-                                    </label>
-                                </div>
-                            ))}
-                        </div>
-
-                        <h2>Expenses</h2>
-                        <div className="expenses-group">
-                            {formData.expenses.map((index, expense) => (
-                                <div key={expense.id} className="expense-row">
-                                    <label>
-                                        {expense.name} 
-                                        <input
                                             type="number"
-                                            placeholder="Enter price"
-                                            value={expense.price}
-                                            onChange={(e) => updateExpensePrice(index, e.target.value)}
+                                            placeholder={material.measure}
+                                            value={material.qty}
+                                            onChange={(e) => updateMaterialQty(index, e.target.value)}
                                             required
                                         />
                                     </label>
                                 </div>
                             ))}
+                        </div>
+
+                        <h2>Expences</h2>
+                        <div className="expenses-group">
+                        {formData.expences.map((expence, index) => (
+                            <div key={expence.id} className="expense-row">
+                                <label>
+                                    {expence.name}
+                                    <input
+                                        type="number"
+                                        placeholder="Enter price"
+                                        value={expence.price}
+                                        onChange={(e) => updateExpencePrice(index, e.target.value)}
+                                        required
+                                    />
+                                </label>
+                            </div>
+                        ))}
                         </div>
                     </div>
                 </div>

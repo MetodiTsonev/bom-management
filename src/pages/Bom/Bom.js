@@ -12,9 +12,8 @@ const Bom = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
-  const [isViewVisible, setIsViewVisible] = useState(false);
 
-  const headers = {PRODUCT_ID: `PRODUCT_ID`, MATERIAL_ID: `MATERIAL_ID`, BOM_QTY: `BOM_QTY`};
+  const headers = {Product: `PRODUCT_ID`, Material: `MATERIAL_ID`, Quantity: `BOM_QTY`};
 
   const fetchData = () => {
     fetch('http://localhost:5001/api/bom')
@@ -42,13 +41,46 @@ const handleAdd = () => {
 
 const handleClose = () => {
   setIsAddVisible(false);
-  setIsViewVisible(false);
 };
 
-const handleSubmit = () => {
-  fetchData(); // Refresh data after adding or updating a material
-  handleClose(); // Close the form
+const handleSubmit = async (formData) => {
+  try {
+      console.log('Submitting form data:', formData);
+
+      const response = await fetch('http://localhost:5001/api/products/add', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+          const errorMessage = await response.json();
+          throw new Error(`Failed to add product: ${errorMessage.error}`);
+      }
+
+      console.log('Product added successfully.');
+      fetchData(); // Refresh the data table
+      handleClose(); // Close the form
+  } catch (error) {
+      console.error('Error submitting form data:', error.message);
+      alert(`Error: ${error.message}`);
+  }
 };
+
+const handleClear = () => {
+  setFilteredData(data);
+  setSearchValue(''); //TODO doesn't work
+}
+
+const handleSearch = () => {
+  setFilteredData(data.filter(row =>
+      Object.values(row).some(value =>
+          value.toString().toLowerCase().includes(searchValue.toLowerCase())
+      )
+  ));
+}
 
 const handleDelete = () => {
   if (selectedRow !== null) {
@@ -71,25 +103,6 @@ const handleDelete = () => {
   }
 };
 
-const handleView = () => {
-  // TODO: VIEW FUNCTIONALITY
-};
-
-const handleClear = () => {
-  setFilteredData(data);
-  setSearchValue(''); //TODO doesn't work
-};
-
-const handleSearch = () => {
-  const search = searchValue.toLowerCase();
-  const filtered = data.filter(row => {
-    return Object.values(row).some(value => {
-      return String(value).toLowerCase().includes(search);
-    });
-  });
-  setFilteredData(filtered);
-};
-
 return (
   <div>
     <Description text='Bill of Materials' description='The Bom Page is used to create Products and its specifications.'/>
@@ -105,7 +118,6 @@ return (
         </div>
         <Button label="Add" onClick={handleAdd} type="add" />
         <Button label="Delete" onClick={handleDelete} type="delete" />
-        <Button label="View" onClick={handleView} type="view" />
       </div>
     </div>
     {isAddVisible && <AddProductForm onClose={handleClose} onSubmit={handleSubmit} />}
