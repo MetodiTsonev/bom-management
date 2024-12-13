@@ -10,6 +10,8 @@ const ViewForm = ({ onClose, viewObject }) => {
         priceDate: ''
     });
 
+    const [products, setProducts] = useState([]);
+
     useEffect(() => {
         if (viewObject) {
             console.log("View object data in form:", viewObject); // Debugging log
@@ -20,6 +22,7 @@ const ViewForm = ({ onClose, viewObject }) => {
                 measure: viewObject.MATERIAL_MEASURE || '',
                 priceDate: viewObject.priceDate ? viewObject.priceDate.split('T')[0] : '' // Format date to yyyy-MM-dd
             });
+            setProducts(viewObject.products || []);
         }
     }, [viewObject]);
     return (
@@ -71,7 +74,33 @@ const ViewForm = ({ onClose, viewObject }) => {
                 </div>
                 <div className="right-column">
                     <h1>Product list</h1>
-                    {/* TODO add the products, that contain the material in this side of the table */}
+                    {products.length > 0 ? (
+                        products.map((product, index) => (
+                            <form key={product.PRODUCT_ID} className="product-form">
+                                <label>
+                                    Product ID:
+                                    <input
+                                        type="text"
+                                        name="productId"
+                                        value={product.PRODUCT_ID}
+                                        readOnly
+                                    />
+                                </label>
+                                <label>
+                                    Product Name:
+                                    <input
+                                        type="text"
+                                        name="productName"
+                                        value={product.PRODUCT_NAME}
+                                        readOnly
+                                    />
+                                </label>
+                                {/* Add other product fields here if available */}
+                            </form>
+                        ))
+                    ) : (
+                        <p>No products found for this material.</p>
+                    )}
                 </div>
             </div>
             <button type="button" onClick={onClose}>Close</button>

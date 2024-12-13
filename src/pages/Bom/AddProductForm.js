@@ -7,10 +7,10 @@ const AddProductForm = ({ onClose, onSubmit }) => {
         name: '',
         description: '',
         materials: [],
-        expenses: [],
+        expences: [],
     });
     const [materialsGroup, setMaterialsGroup] = useState([]);
-    const [expensesGroup, setExpensesGroup] = useState([]);
+    const [expencesGroup, setExpencesGroup] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -19,9 +19,9 @@ const AddProductForm = ({ onClose, onSubmit }) => {
                 const materialsData = await materialsResponse.json();
                 setMaterialsGroup(materialsData);
 
-                const expensesResponse = await fetch('http://localhost:5001/api/expences');
-                const expensesData = await expensesResponse.json();
-                setExpensesGroup(expensesData);
+                const expencesResponse = await fetch('http://localhost:5001/api/expences');
+                const expencesData = await expencesResponse.json();
+                setExpencesGroup(expencesData);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -47,7 +47,7 @@ const AddProductForm = ({ onClose, onSubmit }) => {
                 ...prevFormData,
                 materials: [...prevFormData.materials, { id: materialId, name: material.MATERIAL_NAME, measure: material.MATERIAL_MEASURE, qty: '' }]
             }));
-        }  
+        }
     };
 
     const updateMaterialQty = (index, value) => {
@@ -57,27 +57,29 @@ const AddProductForm = ({ onClose, onSubmit }) => {
             ...prevFormData,
             materials: updatedMaterials
         }));
+        console.log(formData.materials);
     };
 
-    const addExpense = (e) => {
-        const expenseId = Number(e.target.value);
-        const expense = expensesGroup.find((ex) => ex.EXPENCE_ID === expenseId);
+    const addExpence = (e) => {
+        const expenceId = Number(e.target.value);
+        const expence = expencesGroup.find((ex) => ex.EXPENCE_ID === expenceId);
 
-        if (expense && !formData.expenses.find((ex) => ex.id === expenseId)) {
+        if (expence && !formData.expences.find((ex) => ex.id === expenceId)) {
             setFormData((prevFormData) => ({
                 ...prevFormData,
-                expenses: [...prevFormData.expenses, { id: expenseId, name: expense.EXPENCE_NAME, price: '' }]
+                expences: [...prevFormData.expences, { id: expenceId, name: expence.EXPENCE_NAME, price: '' }]
             }));
         }
     };
 
-    const updateExpensePrice = (index, value) => {
-        const updatedExpenses = [...formData.expenses];
-        updatedExpenses[index].price = Number(value);
+    const updateExpencePrice = (index, value) => {
+        const updatedExpences = [...formData.expences];
+        updatedExpences[index].price = Number(value);
         setFormData((prevFormData) => ({
             ...prevFormData,
-            expenses: updatedExpenses
-        }));        
+            expences: updatedExpences
+        }));
+        console.log(formData.expences);
     };
 
     const handleSubmit = (e) => {
@@ -134,12 +136,12 @@ const AddProductForm = ({ onClose, onSubmit }) => {
                             </select>
                         </label>
                         <label>
-                            Expenses:
-                            <select onChange={addExpense} value="">
-                                <option value="" disabled>Select an expense</option>
-                                {expensesGroup.map((expense) => (
-                                    <option key={expense.EXPENCE_ID} value={expense.EXPENCE_ID}>
-                                        {expense.EXPENCE_NAME}
+                            Expences:
+                            <select onChange={addExpence} value="">
+                                <option value="" disabled>Select an expence</option>
+                                {expencesGroup.map((expence) => (
+                                    <option key={expence.EXPENCE_ID} value={expence.EXPENCE_ID}>
+                                        {expence.EXPENCE_NAME}
                                     </option>
                                 ))}
                             </select>
@@ -164,18 +166,18 @@ const AddProductForm = ({ onClose, onSubmit }) => {
                                 </div>
                             ))}
                         </div>
-                        
-                        <h2>Expenses</h2>
+
+                        <h2>Expences</h2>
                         <div className="expenses-group">
-                        {formData.expenses.map((expense, index) => (
-                            <div key={expense.id} className="expense-row">
+                        {formData.expences.map((expence, index) => (
+                            <div key={expence.id} className="expense-row">
                                 <label>
-                                    {expense.name} 
+                                    {expence.name}
                                     <input
                                         type="number"
                                         placeholder="Enter price"
-                                        value={expense.price}
-                                        onChange={(e) => updateExpensePrice(index, e.target.value)}
+                                        value={expence.price}
+                                        onChange={(e) => updateExpencePrice(index, e.target.value)}
                                         required
                                     />
                                 </label>
