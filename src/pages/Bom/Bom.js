@@ -70,17 +70,21 @@ const handleSubmit = async (formData) => {
 };
 
 const handleClear = () => {
-  setFilteredData(data);
-  setSearchValue(''); //TODO doesn't work
+  setSearchValue(''); // Clear the search input
+  setFilteredData(data); // Reset the filtered data
+  setSelectedRow(null); // Clear selected row
 }
 
-const handleSearch = () => {
-  setFilteredData(data.filter(row =>
-      Object.values(row).some(value =>
-          value.toString().toLowerCase().includes(searchValue.toLowerCase())
+const handleSearch = (searchInput) => {
+  setSearchValue(searchInput); // Update the `searchValue` state
+  setFilteredData(
+    data.filter((row) =>
+      Object.values(row).some((value) =>
+        value.toString().toLowerCase().includes(searchInput.toLowerCase())
       )
-  ));
-}
+    )
+  );
+};
 
 const handleDelete = () => {
   if (selectedRow !== null) {
@@ -108,13 +112,12 @@ return (
     <Description text='Bill of Materials' description='The Bom Page is used to create Products and its specifications.'/>
     <div className="container">
       <div className="left-column">
-        <Table data={data} onRowSelect={setSelectedRow} headers={headers}/>
+        <Table data={filteredData} onRowSelect={setSelectedRow} headers={headers}/>
         <Button label="Clear filters" onClick={handleClear} type="clear"/>
       </div>
       <div className="right-column">
         <div className="searchField">
-          <Search onSearch={setSearchValue} />
-          <Button label="Go" onClick={handleSearch} type="search" />
+          <Search value={searchValue} onSearch={handleSearch} />
         </div>
         <Button label="Add" onClick={handleAdd} type="add" />
         <Button label="Delete" onClick={handleDelete} type="delete" />

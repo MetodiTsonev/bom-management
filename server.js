@@ -371,9 +371,30 @@ app.post('/api/products/add', async (req, res) => {
     await productRequest.query(productQuery);
     console.log('Product inserted successfully.');
 
-    // Insert into BOM
+    // Insert into BOM (materials)
     for (const material of materials) {
-      console.log('Inserting material:', material);
+      console.log('Processing material:', material);
+
+      // Fetch BOM_QTY if it's not provided in the form
+      let bomQty = material.qty;
+      if (!bomQty) {
+        const qtyQuery = `
+          SELECT BOM_QTY
+          FROM BOM
+          WHERE PRODUCT_ID = @productId AND MATERIAL_ID = @materialId
+        `;
+        const qtyRequest = new sql.Request(transaction);
+        qtyRequest.input('productId', sql.Numeric(18, 0), id);
+        qtyRequest.input('materialId', sql.Numeric(18, 0), material.id);
+
+        const qtyResult = await qtyRequest.query(qtyQuery);
+        bomQty = qtyResult.recordset.length > 0 ? qtyResult.recordset[0].BOM_QTY : null;
+
+        if (!bomQty) {
+          throw new Error(`BOM quantity not found for material ID ${material.id}`);
+        }
+      }
+
       const bomQuery = `
         INSERT INTO BOM (PRODUCT_ID, MATERIAL_ID, BOM_QTY)
         VALUES (@productId, @materialId, @qty)
@@ -381,24 +402,44 @@ app.post('/api/products/add', async (req, res) => {
       const bomRequest = new sql.Request(transaction);
       bomRequest.input('productId', sql.Numeric(18, 0), id);
       bomRequest.input('materialId', sql.Numeric(18, 0), material.id);
-      bomRequest.input('qty', sql.Numeric(10, 3), material.qty);
+      bomRequest.input('qty', sql.Numeric(10, 3), bomQty);
       await bomRequest.query(bomQuery);
       console.log('Material inserted successfully:', material);
     }
 
-    // Insert into OTHER_EXPENCES
+    // Insert into OTHER_EXPENCES (expenses)
     for (const expence of expences) {
-      console.log('Inserting expense:', expense);
-      const expenseQuery = `
+      console.log('Processing expense:', expence);
+
+      // Fetch EXPENSE_VALUE if it's not provided in the form
+      let expenseValue = expence.price;
+      if (!expenseValue) {
+        const expenseQuery = `
+          SELECT EXPRENCE_VALUE
+          FROM EXPENCES
+          WHERE EXPENCE_ID = @expenseId
+        `;
+        const expenseRequest = new sql.Request(transaction);
+        expenseRequest.input('expenseId', sql.Numeric(18, 0), expence.id);
+
+        const expenseResult = await expenseRequest.query(expenseQuery);
+        expenseValue = expenseResult.recordset.length > 0 ? expenseResult.recordset[0].EXPRENCE_VALUE : null;
+
+        if (!expenseValue) {
+          throw new Error(`Expense value not found for expense ID ${expence.id}`);
+        }
+      }
+
+      const otherExpensesQuery = `
         INSERT INTO OTHER_EXPENCES (PRODUCT_ID, EXPENCE_ID, EXPRENCE_VALUE)
         VALUES (@productId, @expenseId, @value)
       `;
-      const expenseRequest = new sql.Request(transaction);
-      expenseRequest.input('productId', sql.Numeric(18, 0), id);
-      expenseRequest.input('expenseId', sql.Numeric(18, 0), expense.id);
-      expenseRequest.input('value', sql.Numeric(10, 2), expense.value);
-      await expenseRequest.query(expenseQuery);
-      console.log('Expense inserted successfully:', expense);
+      const otherExpensesRequest = new sql.Request(transaction);
+      otherExpensesRequest.input('productId', sql.Numeric(18, 0), id);
+      otherExpensesRequest.input('expenseId', sql.Numeric(18, 0), expence.id);
+      otherExpensesRequest.input('value', sql.Numeric(10, 2), expenseValue);
+      await otherExpensesRequest.query(otherExpensesQuery);
+      console.log('Expense inserted successfully:', expence);
     }
 
     await transaction.commit();

@@ -74,33 +74,17 @@ const ViewForm = ({ onClose, viewObject }) => {
                 </div>
                 <div className="right-column">
                     <h1>Product list</h1>
-                    {products.length > 0 ? (
-                        products.map((product, index) => (
-                            <form key={product.PRODUCT_ID} className="product-form">
-                                <label>
-                                    Product ID:
-                                    <input
-                                        type="text"
-                                        name="productId"
-                                        value={product.PRODUCT_ID}
-                                        readOnly
-                                    />
-                                </label>
-                                <label>
-                                    Product Name:
-                                    <input
-                                        type="text"
-                                        name="productName"
-                                        value={product.PRODUCT_NAME}
-                                        readOnly
-                                    />
-                                </label>
-                                {/* Add other product fields here if available */}
-                            </form>
+                    <ul>
+                        {products.length > 0 ? (
+                            products.map((product) => (
+                            <li key={product.PRODUCT_ID}>
+                                {product.PRODUCT_NAME}
+                            </li>
                         ))
-                    ) : (
-                        <p>No products found for this material.</p>
-                    )}
+                        ) : (
+                            <p>No products found for this material.</p>
+                        )}
+                    </ul>
                 </div>
             </div>
             <button type="button" onClick={onClose}>Close</button>
