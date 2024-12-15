@@ -225,6 +225,44 @@ app.get('/api/products/:id/materials', async (req, res) => {
   }
 });
 
+app.get('/api/products/:productId/total-cost', async (req, res) => {
+  const { productId } = req.params;
+
+  try {
+    // 1. Calculate the total material cost
+    const materialCostResult = await sql.query`
+      SELECT SUM(b.BOM_QTY * p.PRICE_PRICE) AS totalMaterialCost
+      FROM BOM b
+      JOIN Price_List p ON b.MATERIAL_ID = p.MATERIAL_ID
+      WHERE b.PRODUCT_ID = ${productId}
+    `;
+
+    const totalMaterialCost = materialCostResult.recordset[0]?.totalMaterialCost || 0;
+
+    // 2. Calculate the total other expenses
+    const expenseResult = await sql.query`
+      SELECT SUM(e.EXPRENCE_VALUE) AS totalOtherExpenses
+      FROM OTHER_EXPENCES e
+      WHERE e.PRODUCT_ID = ${productId}
+    `;
+
+    const totalOtherExpenses = expenseResult.recordset[0]?.totalOtherExpenses || 0;
+
+    // 3. Calculate the total production cost
+    const totalProductionCost = totalMaterialCost + totalOtherExpenses;
+
+    // Return the calculated costs
+    res.json({
+      totalMaterialCost,
+      totalOtherExpenses,
+      totalProductionCost,
+    });
+  } catch (error) {
+    console.error('Error calculating total cost for product:', error.message);
+    res.status(500).json({ error: 'Failed to calculate total cost', details: error.message });
+  }
+});
+
 //================================================================================================
 //                                          EXPENCES
 //================================================================================================
@@ -276,6 +314,7 @@ app.delete('/api/expences/:id', async (req, res) => {
     res.status(500).json({ error: 'Failed to delete expense' });
   }
 });
+
 
 //================================================================================================
 //                                            BOM
@@ -449,6 +488,44 @@ app.post('/api/products/add', async (req, res) => {
     await transaction.rollback();
     console.error('Transaction failed:', error.message);
     res.status(500).json({ error: 'Failed to add product, materials, and expenses', details: error.message });
+  }
+});
+
+app.get('/api/products/:productId/total-cost', async (req, res) => {
+  const { productId } = req.params;
+
+  try {
+    // 1. Calculate the total material cost
+    const materialCostResult = await sql.query`
+      SELECT SUM(b.BOM_QTY * p.PRICE_PRICE) AS totalMaterialCost
+      FROM BOM b
+      JOIN Price_List p ON b.MATERIAL_ID = p.MATERIAL_ID
+      WHERE b.PRODUCT_ID = ${productId}
+    `;
+
+    const totalMaterialCost = materialCostResult.recordset[0]?.totalMaterialCost || 0;
+
+    // 2. Calculate the total other expenses
+    const expenseResult = await sql.query`
+      SELECT SUM(e.EXPRENCE_VALUE) AS totalOtherExpenses
+      FROM OTHER_EXPENCES e
+      WHERE e.PRODUCT_ID = ${productId}
+    `;
+
+    const totalOtherExpenses = expenseResult.recordset[0]?.totalOtherExpenses || 0;
+
+    // 3. Calculate the total production cost
+    const totalProductionCost = totalMaterialCost + totalOtherExpenses;
+
+    // Return the calculated costs
+    res.json({
+      totalMaterialCost,
+      totalOtherExpenses,
+      totalProductionCost,
+    });
+  } catch (error) {
+    console.error('Error calculating total cost for product:', error.message);
+    res.status(500).json({ error: 'Failed to calculate total cost', details: error.message });
   }
 });
 

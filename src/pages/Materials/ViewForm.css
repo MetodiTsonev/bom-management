@@ -1,4 +1,4 @@
-button {
+ /* button {
     background-color: #007bff;
     color: white;
     border: none;
@@ -10,10 +10,124 @@ button {
 
 .buttons button:hover {
     background-color: #0056b3;
-}
+} */
 
 .left-column, .right-column {
     width: 50%;
     padding: 1em;
     box-sizing: border-box;
+}
+/* Base styling for the popup form */
+.popup-form {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
+
+    /* Ensure the container expands and aligns children */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 600px; /* Set minimum height */
+}
+
+.popup-form h1 {
+    font-size: 2.5rem;
+    font-style: italic;
+    margin-bottom: 1rem;
+    color: #333;
+    text-align: center;
+}
+
+/* Styling for the two columns */
+.container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex: 1; /* Allow columns to fill available space */
+}
+
+
+/* Form and input fields */
+.popup-form form {
+    display: flex;
+    flex-direction: column;
+}
+
+.popup-form label {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.popup-form input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    background-color: white;
+}
+
+/* Product list styling */
+.right-column h1, .left-column h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* Product list styling with enlarged ul */
+.right-column ul {
+    list-style-type: none; /* Remove default bullets */
+    padding: 10px; /* Add spacing inside the list */
+    margin: 0;
+    height: 300px; /* Increase the height of the list */
+    overflow-y: auto; /* Enable scrolling for overflow */
+}
+
+.right-column ul li {
+    padding: 15px; /* Increase padding for larger list items */
+    font-size: 1.2rem; /* Enlarge text size */
+    text-align: center;
+}
+
+.right-column ul li:last-child {
+    border-bottom: none; /* Remove border for last item */
+}
+
+.right-column ul li:hover {
+    background-color: #f1f1f1; /* Add hover effect */
+    cursor: pointer;
+}
+
+/* Close button styling */
+button {
+    display: block;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: auto; /* Push button to the bottom */
+    align-self: center; /* Center horizontally */
+}
+
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
