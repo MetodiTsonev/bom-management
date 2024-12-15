@@ -63,14 +63,33 @@ const Materials = () => {
   const handleDelete = () => {
     if (selectedRow !== null) {
       const materialId = data[selectedRow].MATERIAL_ID;
-      fetch(`http://localhost:5001/api/data/${materialId}`, {
-        method: 'DELETE'
-      })
-      .then(() => {
-        fetchData(); // Refresh data after deletion
-        setSelectedRow(null);
-      })
-      .catch(error => console.error("Error deleting material:", error));
+  
+      // Step 1: Fetch products associated with the material
+      fetch(`http://localhost:5001/api/materials/${materialId}/products`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Failed to fetch products for material: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(products => {
+          // Step 2: Check if there are any products
+          if (products.length > 0) {
+            alert(`Cannot delete material. It is associated with ${products.length} products.`);
+          } else {
+            // Step 3: If no products, proceed with deletion
+            fetch(`http://localhost:5001/api/data/${materialId}`, {
+              method: 'DELETE'
+            })
+            .then(() => {
+              fetchData(); // Refresh data after deletion
+              setSelectedRow(null);
+              alert("Material deleted successfully.");
+            })
+            .catch(error => console.error("Error deleting material:", error));
+          }
+        })
+        .catch(error => console.error("Error checking products for material:", error));
     } else {
       alert("Please select a row to delete");
     }
