@@ -1,10 +1,8 @@
-import React, {useEffect, useState} from 'react';
-
+import React, { useEffect, useState } from 'react';
 import Description from '../../components/Description';
 import Table from '../../components/Table';
 import Search from '../../components/Search';
 import Button from '../../components/Button';
-
 import '../PageStyle.css';
 import ProductForm from "./ProductForm";
 
@@ -17,29 +15,23 @@ function Products() {
 
   const fetchData = () => {
     fetch('http://localhost:5001/api/products')
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          console.log("Fetched data:", data); // Log to verify data
-          setData(data);
-          setFilteredData(data);
-        })
-        .catch(error => console.error("Error fetching products:", error));
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log("Fetched data:", data); // Log to verify data
+        setData(data);
+        setFilteredData(data);
+      })
+      .catch(error => console.error("Error fetching products:", error));
   };
 
   useEffect(() => {
     fetchData();
   }, []);
-
-  const handleClear = () => {
-    setSearchValue(''); // Clear the search input
-    setFilteredData(data); // Reset the filtered data
-    setSelectedRow(null); // Clear selected row
-  }
 
   const handleSearch = (searchInput) => {
     setSearchValue(searchInput); // Update the `searchValue` state
@@ -58,13 +50,14 @@ function Products() {
       <div className="container">
         <div className="left-column">
           <div className="searchField">
-          <Search value={searchValue} onSearch={handleSearch} />
+            <Search value={searchValue} onSearch={handleSearch} />
           </div>
           <Table data={filteredData} onRowSelect={setSelectedRow} headers={headers}/>
-          <Button label="Clear filters" onClick={handleClear} type="clear"/>
         </div>
         <div className="right-column">
-          {selectedRow !== null && <ProductForm formObject={data[selectedRow]}/>}
+          {selectedRow !== null && (
+            <ProductForm formObject={data[selectedRow]} key={data[selectedRow].PRODUCT_ID} />
+          )}
         </div>
       </div>
     </div>

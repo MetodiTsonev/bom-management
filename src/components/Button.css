@@ -31,14 +31,3 @@ button{
     background-color: #009879;
     width: 15%;
 }
-
-.btn-clear{
-    padding: 10px;
-    margin-left: 10px;
-    background-color: rgb(201, 195, 195);
-    width: 25%;
-} 
-
-.btn-clear:hover{
-    color: crimson
-}

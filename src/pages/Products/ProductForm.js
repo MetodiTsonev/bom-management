@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from "react";
-import "./ProductForm.css"
-
+import "./ProductForm.css";
 
 const ProductForm = ({ formObject }) => {
-    const [formData, setFormData] = useState({
-        id: formObject.PRODUCT_ID,
-        name: formObject.PRODUCT_NAME,
-        description: formObject.PRODUCT_DESCRIPTION,
-        materials: []
+  const [formData, setFormData] = useState({
+    id: formObject.PRODUCT_ID,
+    name: formObject.PRODUCT_NAME,
+    description: formObject.PRODUCT_DESCRIPTION,
+    materials: []
+  });
+
+  useEffect(() => {
+    setFormData({
+      id: formObject.PRODUCT_ID,
+      name: formObject.PRODUCT_NAME,
+      description: formObject.PRODUCT_DESCRIPTION,
+      materials: [] // Reset materials to refetch them for the new product
     });
+  }, [formObject]);
 
     const [totalCost, setTotalCost] = useState(null); // State to store total cost
 
