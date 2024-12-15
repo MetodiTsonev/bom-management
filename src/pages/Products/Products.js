@@ -35,12 +35,6 @@ function Products() {
     fetchData();
   }, []);
 
-  const handleClear = () => {
-    setSearchValue(''); // Clear the search input
-    setFilteredData(data); // Reset the filtered data
-    setSelectedRow(null); // Clear selected row
-  }
-
   const handleSearch = (searchInput) => {
     setSearchValue(searchInput); // Update the `searchValue` state
     setFilteredData(
@@ -61,7 +55,6 @@ function Products() {
           <Search value={searchValue} onSearch={handleSearch} />
           </div>
           <Table data={filteredData} onRowSelect={setSelectedRow} headers={headers}/>
-          <Button label="Clear filters" onClick={handleClear} type="clear"/>
         </div>
         <div className="right-column">
           {selectedRow !== null && <ProductForm formObject={data[selectedRow]}/>}

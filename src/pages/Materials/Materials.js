@@ -123,12 +123,6 @@ const Materials = () => {
     }
   };
 
-  const handleClear = () => {
-    setSearchValue(''); // Clear the search input
-    setFilteredData(data); // Reset the filtered data
-    setSelectedRow(null); // Clear selected row
-  }
-
   const handleSearch = (searchInput) => {
     setSearchValue(searchInput); // Update the `searchValue` state
     setFilteredData(
@@ -146,7 +140,6 @@ const Materials = () => {
       <div className="container">
         <div className="left-column">
           <Table data={filteredData} onRowSelect={setSelectedRow} headers={headers}/>
-          <Button label = "Clear filters" onClick={handleClear} type="clear"/>
         </div>
         <div className="right-column">
           <div className="searchField">
